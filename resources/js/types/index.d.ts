@@ -36,3 +36,13 @@ export interface User {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface Child {
+    id: number;
+    name: string;
+    gender: string;
+    avatar?: string;
+    birthday?: date | null;
+    height?: number;
+    weight?: number;
+}
