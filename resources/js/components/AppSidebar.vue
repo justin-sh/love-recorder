@@ -15,13 +15,23 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'List Children ',
+        title: 'List Children',
         href: '/children/list',
         icon: Users,
     },
     {
         title: 'Add Child',
         href: '/children/add',
+        icon: UserRoundPlus,
+    },
+    {
+        title: 'List Children Events',
+        href: '/event/list',
+        icon: Users,
+    },
+    {
+        title: 'Add Child Event',
+        href: '/event/add',
         icon: UserRoundPlus,
     },
 ];

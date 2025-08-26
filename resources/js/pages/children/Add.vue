@@ -58,7 +58,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
                             <div class="grid gap-2">
                                 <Label for="bod">Birthday</Label>
-                                <DatePicker name="birthday"/>
+                                <DatePicker name="birthday" type="date"/>
                             </div>
 
                             <div class="grid gap-2">
