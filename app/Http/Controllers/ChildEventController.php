@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ChildResource;
 use App\Http\Resources\EventResource;
-use App\Models\Child;
 use App\Models\Event;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -18,25 +17,25 @@ class ChildEventController extends Controller
      */
     public function index(): Response
     {
-        $data = EventResource::collection(Event::all());
+        $data = EventResource::collection(Event::all()->sortByDesc(['event_at', 'id']));
         return Inertia::render('event/List', [
-            'events'=> $data,
+            'events' => $data,
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request): Response
+    public function create(Request $request): RedirectResponse
     {
 
-        Log::debug('--------');
-        Log::debug(json_encode($request->json()->all()));
+//        Log::debug('--------');
+//        Log::debug(json_encode($request->json()->all()));
 
         $event = new Event($request->json()->all());
         $event->save();
 
-        return Inertia::render('event/Add',[]);
+        return to_route('event.list');
     }
 
     /**

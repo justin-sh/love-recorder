@@ -21,17 +21,22 @@ const breadcrumbItems: BreadcrumbItem[] = [
     }
 ];
 
-const page = usePage()
-const children = page.props.children as Child[]
-const evtTypes = page.props.type
+function getDateTimeLocalString(d: Date) {
+    d.setSeconds(0, 0);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().substring(0, 16);
+}
 
-const evtFor = ref({key:''})
-const evtType = ref({key:''})
+const page = usePage();
+const children = page.props.children as Child[];
+const defaultChild = (page.props.defaultChild as Child) ?? { key: '' };
+const evtTypes = page.props.type;
 
-const utcNow = new Date()
-utcNow.setSeconds(0, 0)
-const defaultTime = new Date(utcNow.getTime() - utcNow.getTimezoneOffset() * 60000).toISOString().substring(0, 16)
-console.log(defaultTime)
+const evtFor = ref(defaultChild);
+const evtType = ref({ key: '' });
+
+const defaultTime = getDateTimeLocalString(new Date());
+const evtAt = ref(defaultTime)
+const evtEnd = ref('')
 </script>
 
 <template>
@@ -51,31 +56,39 @@ console.log(defaultTime)
                     >
                         <div class="grid gap-6">
 
-                            <div class="grid gap-2">
+                            <div class="grid gap-2 w-60">
                                 <Label for="eventAt">Event At</Label>
-                                <DatePicker type="datetime-local" name="event_at" id="eventAt" :default-value="defaultTime"/>
+                                <div class="flex">
+                                    <DatePicker type="datetime-local" name="event_at" id="eventAt"
+                                                v-model="evtAt"/>
+                                    <Button type="button" class="ms-1" @click="evtAt = getDateTimeLocalString(new Date())">Now</Button>
+                                </div>
                             </div>
 
-                            <div class="grid gap-2">
+                            <div class="grid gap-2 w-60">
                                 <Label for="eventFor">Event For</Label>
-                                <Select id="eventFor" :options="children" v-model="evtFor"/>
-                                <input type="hidden" name="event_child_id" v-model="evtFor.key"/>
+                                <Select id="eventFor" :options="children" :default-value="defaultChild" v-model="evtFor"
+                                        placeholder="event for" />
+                                <input type="hidden" name="event_child_id" v-model="evtFor.key" />
                             </div>
 
-                            <div class="grid gap-2">
+                            <div class="grid gap-2 w-60">
                                 <Label for="eventType">Event Type</Label>
-                                <Select id='eventType' :options="evtTypes" v-model="evtType"/>
-                                <input type="hidden" name="type" v-model="evtType.key"/>
+                                <Select id='eventType' :options="evtTypes" v-model="evtType" placeholder="event type" />
+                                <input type="hidden" name="type" v-model="evtType.key" />
                             </div>
 
-                            <div class="grid gap-2">
+                            <div class="grid gap-2 w-60">
                                 <Label for="eventEnd">Event End</Label>
-                                <DatePicker type="datetime-local" name="event_end" id="eventEnd"/>
+                                <div class="flex">
+                                    <DatePicker type="datetime-local" name="event_end" id="eventEnd" v-model="evtEnd"/>
+                                    <Button type="button" class="ms-1" @click="evtEnd = getDateTimeLocalString(new Date())">Now</Button>
+                                </div>
                             </div>
 
                             <div class="grid gap-2">
                                 <Label for="note">Notes</Label>
-                                <Textarea id="note" name="note" placeholder="event note"/>
+                                <Textarea id="note" name="note" placeholder="event note" />
 
                                 <InputError :message="errors.name" />
                             </div>

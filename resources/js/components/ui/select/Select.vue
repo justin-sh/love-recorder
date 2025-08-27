@@ -17,39 +17,17 @@ import {
 import { Check, ChevronDown } from 'lucide-vue-next';
 import { computed } from 'vue';
 
-const props = defineProps<ComboboxRootProps & { options: Array< { key:string, value:object }> }>()
+const props = defineProps<ComboboxRootProps & { options: Array< { key:string, value:object }>, placeholder?:string }>()
 const emits = defineEmits<ComboboxRootEmits>()
 
 const delegatedProps = computed(() => {
-    const { options: _, ...delegated } = props;
+    const { options: _, placeholder:_1, ...delegated } = props;
 
     return delegated;
 });
 
 const forward = useForwardPropsEmits(delegatedProps, emits)
 
-// const options = [
-//     { name: 'Fruit', children: [
-//             { name: 'Apple' },
-//             { name: 'Banana' },
-//             { name: 'Orange' },
-//             { name: 'Honeydew' },
-//             { name: 'Grapes' },
-//             { name: 'Watermelon' },
-//             { name: 'Cantaloupe' },
-//             { name: 'Pear' },
-//         ] },
-//     { name: 'Vegetable', children: [
-//             { name: 'Cabbage' },
-//             { name: 'Broccoli' },
-//             { name: 'Carrots' },
-//             { name: 'Lettuce' },
-//             { name: 'Spinach' },
-//             { name: 'Bok Choy' },
-//             { name: 'Cauliflower' },
-//             { name: 'Potatoes' },
-//         ] },
-// ]
 </script>
 
 <template>
@@ -60,7 +38,7 @@ const forward = useForwardPropsEmits(delegatedProps, emits)
         <ComboboxAnchor class="min-w-[160px] inline-flex items-center justify-between rounded-lg border px-[15px] text-base leading-none h-[35px] gap-[5px] bg-white text-grass11 hover:bg-stone-50 shadow-sm focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-grass9 outline-none">
             <ComboboxInput
                 class="!bg-transparent outline-none text-grass11 h-full selection:bg-grass5 placeholder-stone-400"
-                placeholder="Placeholder..."
+                :placeholder="props.placeholder"
                 :display-value="(v) => v?.value"
             />
             <ComboboxTrigger>

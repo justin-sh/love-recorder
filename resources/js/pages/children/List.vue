@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { BreadcrumbItem, Child, User } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 
 const breadcrumbItems: BreadcrumbItem[] = [
@@ -13,6 +13,10 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const page = usePage();
 const children = page.props.children.data as Child[];
+
+const gotoAddEvent = function(child:Child) {
+    router.get('/event/add', {c_id: child.id})
+}
 </script>
 
 <template>
@@ -40,7 +44,7 @@ const children = page.props.children.data as Child[];
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Height">{{ c.height ?? 'Unknown' }} cm</td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Weight">{{ c.weight ?? 'Unknown' }} gram</td>
                     <td class="border-0 border-b md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2 text-center" data-title="Action">
-                        <Button as="div">Add Event</Button>
+                        <Button as="div" @click="gotoAddEvent(c)">Add Event</Button>
                     </td>
                 </tr>
                 </tbody>

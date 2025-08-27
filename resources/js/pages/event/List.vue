@@ -22,7 +22,7 @@ const events = page.props.events.data;
             <table class="table-auto border border-gray-400 dark:border-gray-500 mt-4 w-full">
                 <thead class="hidden md:table-header-group">
                 <tr>
-                    <th class="border border-gray-300 dark:border-gray-600 py-2">Id</th>
+                    <th class="border border-gray-300 dark:border-gray-600 py-2">Event Id</th>
                     <th class="border border-gray-300 dark:border-gray-600">Child</th>
                     <th class="border border-gray-300 dark:border-gray-600">Type</th>
                     <th class="border border-gray-300 dark:border-gray-600">At</th>
@@ -33,7 +33,7 @@ const events = page.props.events.data;
                 </thead>
                 <tbody>
                 <tr v-for="c in events" :key="c.id" class="hover:bg-blue-50 flex flex-col md:table-row">
-                    <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2 text-center py-2" data-title="Id">{{ c.id }}</td>
+                    <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2 text-center py-2" data-title="Event Id">{{ c.id }}</td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="For">{{ c.for }}</td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Type">{{ c.type }}</td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="At">{{ c.event_at }}</td>
