@@ -15,18 +15,13 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'List Children',
-        href: '/children/list',
+        title: 'List Children Events',
+        href: '/event/list',
         icon: Users,
     },
     {
-        title: 'Add Child',
-        href: '/children/add',
-        icon: UserRoundPlus,
-    },
-    {
-        title: 'List Children Events',
-        href: '/event/list',
+        title: 'List Children',
+        href: '/children/list',
         icon: Users,
     },
     {
@@ -34,19 +29,24 @@ const mainNavItems: NavItem[] = [
         href: '/event/add',
         icon: UserRoundPlus,
     },
+    {
+        title: 'Add Child',
+        href: '/children/add',
+        icon: UserRoundPlus,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
+    // {
+    //     title: 'Github Repo',
+    //     href: 'https://github.com/laravel/vue-starter-kit',
+    //     icon: Folder,
+    // },
+    // {
+    //     title: 'Documentation',
+    //     href: 'https://laravel.com/docs/starter-kits#vue',
+    //     icon: BookOpen,
+    // },
 ];
 </script>
 

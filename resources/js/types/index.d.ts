@@ -43,6 +43,7 @@ export interface Child {
     gender: string;
     avatar?: string;
     birthday?: date | null;
+    age?: { year:int, month:int, day:int }  | null;
     height?: number;
     weight?: number;
 }

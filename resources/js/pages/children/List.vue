@@ -30,6 +30,7 @@ const gotoAddEvent = function(child:Child) {
                     <th class="border border-gray-300 dark:border-gray-600">Name</th>
                     <th class="border border-gray-300 dark:border-gray-600">Gender</th>
                     <th class="border border-gray-300 dark:border-gray-600">Birthday</th>
+                    <th class="border border-gray-300 dark:border-gray-600">Age</th>
                     <th class="border border-gray-300 dark:border-gray-600">Height</th>
                     <th class="border border-gray-300 dark:border-gray-600">Weight</th>
                     <th class="border border-gray-300 dark:border-gray-600">Action</th>
@@ -41,6 +42,9 @@ const gotoAddEvent = function(child:Child) {
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Name">{{ c.name }}</td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Gender">{{ c.gender }}</td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Birthday">{{ c.birthday }}</td>
+                    <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Age">
+                        <template v-if="c.age?.year">{{ c.age?.year }}ys</template> <template v-if="c.age?.month">{{ c.age?.month }}ms</template> <template v-if="c.age?.day">{{ c.age?.day + 1 }}ds</template>
+                    </td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Height">{{ c.height ?? 'Unknown' }} cm</td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Weight">{{ c.weight ?? 'Unknown' }} gram</td>
                     <td class="border-0 border-b md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2 text-center" data-title="Action">

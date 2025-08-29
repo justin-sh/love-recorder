@@ -33,7 +33,9 @@ const events = page.props.events.data;
                 </thead>
                 <tbody>
                 <tr v-for="c in events" :key="c.id" class="hover:bg-blue-50 flex flex-col md:table-row">
-                    <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2 text-center py-2" data-title="Event Id">{{ c.id }}</td>
+                    <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2 text-center py-2" data-title="Event Id">
+                        #{{ c.id }} [{{ c.event_at_hr }}]
+                    </td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="For">{{ c.for }}</td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="Type">{{ c.type }}</td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2" data-title="At">{{ c.event_at }}</td>

@@ -8,6 +8,7 @@ enum EventType : string
     case BottleFeeding = 'bottle_feeding';
     case Wee = 'wee';
     case Poo = 'poo';
+    case Weight = 'weight';
     case Bath = 'bath';
     case Others = 'others';
 }
