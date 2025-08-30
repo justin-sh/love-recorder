@@ -14,29 +14,49 @@ import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { ref } from 'vue';
 
-const breadcrumbItems: BreadcrumbItem[] = [
-    {
-        title: 'Add new child event',
-        href: '/event/add'
-    }
-];
+const page = usePage();
+const children = page.props.children as Child[];
+const evtTypes = page.props.type;
+const event = page.props.event?.data;
+
+const defaultChild = children.find((c) => c.value === (event?.for ?? page.props.defaultChildId)) ?? { key: '' };
+const defaultEventType = evtTypes.find((c) => c.value === event?.type) ?? { key: '' };
+
+const isEdit = event?.id > 0;
+
+const breadcrumbItems: BreadcrumbItem[] = [];
+
+if (isEdit) {
+    breadcrumbItems.push(...[
+        {
+            title: 'List children events',
+            href: route('event.list')
+        },
+        {
+            title: isEdit ? 'Edit child event' : 'Create new child event',
+            href: isEdit ? route('event.update', event?.id) : route('event.create')
+        }
+    ]);
+} else {
+    breadcrumbItems.push(
+        {
+            title: 'Create new child event',
+            href: route('event.create')
+        }
+    )
+}
 
 function getDateTimeLocalString(d: Date) {
     d.setSeconds(0, 0);
     return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().substring(0, 16);
 }
 
-const page = usePage();
-const children = page.props.children as Child[];
-const defaultChild = (page.props.defaultChild as Child) ?? { key: '' };
-const evtTypes = page.props.type;
-
 const evtFor = ref(defaultChild);
-const evtType = ref({ key: '' });
+const evtType = ref(defaultEventType);
 
-const defaultTime = getDateTimeLocalString(new Date());
-const evtAt = ref(defaultTime)
-const evtEnd = ref('')
+const defaultTime = event?.event_at ?? getDateTimeLocalString(new Date());
+const evtAt = ref(defaultTime);
+const evtEnd = ref(event?.event_end ?? '');
 </script>
 
 <template>
@@ -44,24 +64,34 @@ const evtEnd = ref('')
         <Head title="Add Child Event" />
 
         <div class="px-4 py-6">
-            <Heading title="Add Child Event" description="Add a new child event" />
+            <Heading title="Edit Child Event" description="Edit the child event" v-if="isEdit" />
+            <Heading title="Add Child Event" description="Add a new child event" v-else />
 
             <div class="flex-1 md:max-w-2xl">
                 <section class="max-w-xl space-y-12">
                     <Form
                         method="post"
-                        :action="route('event.add')"
+                        :action="isEdit? route( 'event.update' , event?.id ) : route('event.store')"
                         v-slot="{ errors, processing }"
                         class="flex flex-col gap-6"
                     >
                         <div class="grid gap-6">
 
+                            <div class="grid gap-2 w-60" v-if="isEdit">
+                                <Label for="eventAt">Event Id</Label>
+                                <div class="flex">
+                                    {{ event?.id }}
+                                </div>
+                            </div>
+
                             <div class="grid gap-2 w-60">
                                 <Label for="eventAt">Event At</Label>
                                 <div class="flex">
                                     <DatePicker type="datetime-local" name="event_at" id="eventAt"
-                                                v-model="evtAt"/>
-                                    <Button type="button" class="ms-1" @click="evtAt = getDateTimeLocalString(new Date())">Now</Button>
+                                                v-model="evtAt" />
+                                    <Button type="button" class="ms-1"
+                                            @click="evtAt = getDateTimeLocalString(new Date())">Now
+                                    </Button>
                                 </div>
                             </div>
 
@@ -81,14 +111,16 @@ const evtEnd = ref('')
                             <div class="grid gap-2 w-60">
                                 <Label for="eventEnd">Event End</Label>
                                 <div class="flex">
-                                    <DatePicker type="datetime-local" name="event_end" id="eventEnd" v-model="evtEnd"/>
-                                    <Button type="button" class="ms-1" @click="evtEnd = getDateTimeLocalString(new Date())">Now</Button>
+                                    <DatePicker type="datetime-local" name="event_end" id="eventEnd" v-model="evtEnd" />
+                                    <Button type="button" class="ms-1"
+                                            @click="evtEnd = getDateTimeLocalString(new Date())">Now
+                                    </Button>
                                 </div>
                             </div>
 
                             <div class="grid gap-2">
                                 <Label for="note">Notes</Label>
-                                <Textarea id="note" name="note" placeholder="event note" />
+                                <Textarea id="note" name="note" :default-value="event?.note" placeholder="event note" />
 
                                 <InputError :message="errors.name" />
                             </div>
@@ -96,7 +128,7 @@ const evtEnd = ref('')
                             <div class="flex items-center gap-4">
                                 <Button type="submit" tabindex="5" :disabled="processing">
                                     <LoaderCircle v-if="processing" class="w-4 h-4 animate-spin" />
-                                    Add child event
+                                    {{ isEdit ? 'Update' : 'Add' }} child event
                                 </Button>
                             </div>
                         </div>

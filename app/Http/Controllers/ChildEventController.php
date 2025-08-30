@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\EventType;
 use App\Http\Resources\EventResource;
+use App\Models\Child;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,24 +28,24 @@ class ChildEventController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request): RedirectResponse
+    public function create(Request $request): Response
     {
-
-//        Log::debug('--------');
-//        Log::debug(json_encode($request->json()->all()));
-
-        $event = new Event($request->json()->all());
-        $event->save();
-
-        return to_route('event.list');
+        return Inertia::render('event/CreateUpdate', [
+            'defaultChildId' => $request->integer('c_id'),
+            'children' => Child::all(['id as key', 'name as value']),
+            'type' => collect(EventType::cases())->map(fn($e) => ['key' => $e->value, 'value' => $e->name])
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $event = new Event($request->json()->all());
+        $event->save();
+
+        return to_route('event.list');
     }
 
     /**
@@ -57,9 +59,16 @@ class ChildEventController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id): Response
     {
-        //
+        $data = Child::all(['id as key', 'name as value']);
+        $event = Event::find($id);
+
+        return Inertia::render('event/CreateUpdate', [
+            'event' => new EventResource($event),
+            'children' => $data,
+            'type' => collect(EventType::cases())->map(fn($e) => ['key' => $e->value, 'value' => $e->name])
+        ]);
     }
 
     /**
@@ -67,7 +76,10 @@ class ChildEventController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $event = Event::find($id);
+        $event->update($request->json()->all());
+
+        return to_route('event.list');
     }
 
     /**

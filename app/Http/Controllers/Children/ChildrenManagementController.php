@@ -13,7 +13,7 @@ use Inertia\Response;
 
 class ChildrenManagementController extends Controller
 {
-    public function create(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
 //        return Inertia::render('children/Add', [
 //            'canResetPassword' => Route::has('password.request'),

@@ -34,7 +34,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 <section class="max-w-xl space-y-12">
                     <Form
                         method="post"
-                        :action="route('children.add')"
+                        :action="route('children.store')"
                         :reset-on-success="['password', 'password_confirmation']"
                         v-slot="{ errors, processing }"
                         class="flex flex-col gap-6"

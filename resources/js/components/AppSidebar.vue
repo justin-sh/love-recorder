@@ -2,10 +2,18 @@
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem
+} from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Users, UserRoundPlus } from 'lucide-vue-next';
+import { LayoutGrid, UserRoundPlus, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -16,22 +24,22 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'List Children Events',
-        href: '/event/list',
+        href:  route('event.list'),
         icon: Users,
     },
     {
         title: 'List Children',
-        href: '/children/list',
+        href: route('children.list'),
         icon: Users,
     },
     {
         title: 'Add Child Event',
-        href: '/event/add',
+        href: route('event.create'),
         icon: UserRoundPlus,
     },
     {
         title: 'Add Child',
-        href: '/children/add',
+        href: route('children.create'),
         icon: UserRoundPlus,
     },
 ];

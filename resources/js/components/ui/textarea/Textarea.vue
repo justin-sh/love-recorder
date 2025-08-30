@@ -30,5 +30,6 @@ const modelValue = useVModel(props, 'modelValue', emits, {
       props.class,
     )"
     rows="3"
-  />
+  >
+  </textarea>
 </template>
