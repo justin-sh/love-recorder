@@ -35,9 +35,9 @@ const forward = useForwardPropsEmits(delegatedProps, emits)
         class="relative"
         v-bind="forward"
     >
-        <ComboboxAnchor class="min-w-[160px] inline-flex items-center justify-between rounded-lg border px-[15px] text-base leading-none h-[35px] gap-[5px] bg-white text-grass11 hover:bg-stone-50 shadow-sm focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-grass9 outline-none">
+        <ComboboxAnchor class="min-w-[160px] inline-flex items-center justify-between rounded-lg border px-[15px] text-base leading-none h-[35px] gap-[5px] bg-transparent hover:bg-stone-50 shadow-sm focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-grass9 outline-none dark:bg-input/30">
             <ComboboxInput
-                class="!bg-transparent outline-none text-grass11 h-full selection:bg-grass5 placeholder-stone-400"
+                class="!bg-transparent outline-none h-full  placeholder-stone-400"
                 :placeholder="props.placeholder"
                 :display-value="(v) => v?.value"
             />
@@ -46,7 +46,7 @@ const forward = useForwardPropsEmits(delegatedProps, emits)
             </ComboboxTrigger>
         </ComboboxAnchor>
 
-        <ComboboxContent class="absolute z-10 w-full mt-1 min-w-[160px] bg-white overflow-hidden rounded-lg shadow-sm border will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade">
+        <ComboboxContent class="absolute z-10 w-full mt-1 min-w-[160px] bg-white overflow-hidden rounded-lg shadow-sm border will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade dark:bg-input">
             <ComboboxViewport class="p-[5px]">
                 <ComboboxEmpty class="text-mauve8 text-base font-medium text-center py-2" />
 
@@ -68,7 +68,7 @@ const forward = useForwardPropsEmits(delegatedProps, emits)
                             v-for="option in props.options"
                             :key="option.key"
                             :value="option"
-                            class="text-base leading-none text-grass11 rounded-[3px] flex items-center h-[25px] pr-[35px] pl-[25px] relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-grass9 data-[highlighted]:text-grass1"
+                            class="text-base leading-none text-grass11 rounded-[3px] flex items-center h-[25px] pr-[35px] pl-[25px] relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-gray-300 data-[highlighted]:text-black"
                         >
                             <ComboboxItemIndicator
                                 class="absolute left-0 w-[25px] inline-flex items-center justify-center"
