@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\EventType;
+use App\Enums\EventType;
 use App\Http\Resources\EventResource;
 use App\Models\Child;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 

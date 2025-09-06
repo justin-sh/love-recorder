@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Gender;
+use App\Enums\Gender;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,14 +1,7 @@
 <?php
 
-use App\EventType;
 use App\Http\Controllers\ChildEventController;
-use App\Http\Resources\EventResource;
-use App\Models\Child;
-use App\Models\Event;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::middleware('auth')->group(function () {
 

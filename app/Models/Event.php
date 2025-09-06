@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\EventType;
+use App\Enums\EventType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
