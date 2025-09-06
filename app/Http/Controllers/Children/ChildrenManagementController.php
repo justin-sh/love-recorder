@@ -15,22 +15,19 @@ class ChildrenManagementController extends Controller
 {
     public function store(Request $request): RedirectResponse
     {
-//        return Inertia::render('children/Add', [
-//            'canResetPassword' => Route::has('password.request'),
-//            'status' => $request->session()->get('status'),
-//        ]);
         $validatedData = $request->validate([
             'name'=>'required|max:255',
             'gender'=>'required'
         ]);
 
-        Log::debug(json_encode($validatedData));
-        $child = new Child($validatedData);
+        $child = new Child();
+
         $child->name = $validatedData['name'];
         $child->gender = $validatedData['gender'];
         $child->birthday = $request->date('birthday');
         $child->height_dob = $request->integer('height');
         $child->weight_dob = $request->integer('weight');
+        $child->user_id = $request->user()->id;
         $child->save();
 
         return to_route('children.list');

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Gender;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer id
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon birthday
  * @property int height_dob
  * @property int weight_dob
+ * @property int user_id
+ * @property User user
  */
 class Child extends Model
 {
@@ -31,4 +34,9 @@ class Child extends Model
         'gender' => Gender::class,
         'birthday' => 'datetime',
     ];
+
+    public function user():BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
