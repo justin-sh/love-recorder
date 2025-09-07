@@ -8,6 +8,7 @@ use App\Models\Child;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,11 +18,17 @@ class ChildEventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): AnonymousResourceCollection | Response
     {
-        $data = EventResource::collection(Event::all()->sortByDesc(['event_at', 'id']));
+
+        $data = Event::query()->orderByDesc('event_at')->orderByDesc('id')->cursorPaginate(20);
+
+        if($request->wantsJson()){
+            return EventResource::collection($data);
+        }
+
         return Inertia::render('event/List', [
-            'events' => $data,
+            'events' => EventResource::collection($data),
         ]);
     }
 

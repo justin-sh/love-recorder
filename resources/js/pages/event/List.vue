@@ -3,6 +3,9 @@ import type { BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
+import { ref, useTemplateRef } from 'vue';
+import { useIntersectionObserver } from '@vueuse/core';
+import axios from 'axios';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -11,12 +14,30 @@ const breadcrumbItems: BreadcrumbItem[] = [
     }
 ];
 
+const nextPage = useTemplateRef('nextPage');
+
 const gotoEditEvent = function(event) {
     router.get(route('event.edit', event.id));
 };
 
 const page = usePage();
-const events = page.props.events;
+const events = ref(page.props.events.data);
+
+
+useIntersectionObserver(nextPage, ([{ isIntersecting }]) => {
+    if (!isIntersecting || !page.props.events.links.next) {
+        return;
+    }
+
+    // console.log(page.props.events.links.next)
+    axios.get(page.props.events.links.next).then((response) => {
+        // console.log(response.data);
+
+        events.value = [...events.value, ...response.data.data];
+        page.props.events.links = response.data.links;
+
+    });
+});
 </script>
 
 <template>
@@ -50,7 +71,8 @@ const events = page.props.events;
                     </td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2"
                         data-title="Details">
-                        <template v-if="c.details && Object.keys(c.details).length == 1 && Object.keys(c.details).includes('qty')">
+                        <template
+                            v-if="c.details && Object.keys(c.details).length == 1 && Object.keys(c.details).includes('qty')">
                             {{ c.details['qty']['v'] + c.details['qty']['unit'] }}
                         </template>
                         <template v-else>
@@ -75,7 +97,7 @@ const events = page.props.events;
                 </tr>
                 </tbody>
             </table>
-
+            <div ref="nextPage"></div>
         </div>
     </AppLayout>
 </template>
