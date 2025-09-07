@@ -21,7 +21,7 @@ const props = defineProps<ComboboxRootProps & { options: Array< { key:string, va
 const emits = defineEmits<ComboboxRootEmits>()
 
 const delegatedProps = computed(() => {
-    const { options: _, placeholder:_1, ...delegated } = props;
+    const { options: _, placeholder:_1, required:_2, ...delegated } = props;
 
     return delegated;
 });
@@ -39,6 +39,7 @@ const forward = useForwardPropsEmits(delegatedProps, emits)
             <ComboboxInput
                 class="!bg-transparent outline-none h-full  placeholder-stone-400"
                 :placeholder="props.placeholder"
+                :required="props.required"
                 :display-value="(v) => v?.value"
             />
             <ComboboxTrigger>

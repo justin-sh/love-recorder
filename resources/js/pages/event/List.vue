@@ -29,6 +29,7 @@ const events = page.props.events.data;
                     <th class="border border-gray-300 dark:border-gray-600 py-2">Event Id</th>
                     <th class="border border-gray-300 dark:border-gray-600">Child</th>
                     <th class="border border-gray-300 dark:border-gray-600">Type</th>
+                    <th class="border border-gray-300 dark:border-gray-600">Details</th>
                     <th class="border border-gray-300 dark:border-gray-600">At</th>
                     <th class="border border-gray-300 dark:border-gray-600">End</th>
                     <th class="border border-gray-300 dark:border-gray-600">Note</th>
@@ -46,6 +47,17 @@ const events = page.props.events.data;
                     </td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2"
                         data-title="Type">{{ c.type }}
+                    </td>
+                    <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2"
+                        data-title="Details">
+                        <template v-if="c.details && Object.keys(c.details).length == 1 && Object.keys(c.details).includes('qty')">
+                            {{ c.details['qty']['v'] + c.details['qty']['unit'] }}
+                        </template>
+                        <template v-else>
+                            <template v-for="(v,k) in c.details">
+                                {{ k + ': ' + v['v'] + v['unit'] }}
+                            </template>
+                        </template>
                     </td>
                     <td class="border-0 md:border border-gray-300 dark:border-gray-600 before:font-bold flex md:table-cell ps-2"
                         data-title="At">{{ c.event_at }}

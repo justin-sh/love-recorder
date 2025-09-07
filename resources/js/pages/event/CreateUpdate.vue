@@ -18,6 +18,7 @@ const page = usePage();
 const children = page.props.children as Child[];
 const evtTypes = page.props.type;
 const event = page.props.event?.data;
+const eventTypeDetails = page.props.details;
 
 const defaultChild = children.find((c) => c.value === (event?.for ?? page.props.defaultChildId)) ?? { key: '' };
 const defaultEventType = evtTypes.find((c) => c.value === event?.type) ?? { key: '' };
@@ -43,7 +44,7 @@ if (isEdit) {
             title: 'Create new child event',
             href: route('event.create')
         }
-    )
+    );
 }
 
 function getDateTimeLocalString(d: Date) {
@@ -88,7 +89,7 @@ const evtEnd = ref(event?.event_end ?? '');
                                 <Label for="eventAt">Event At</Label>
                                 <div class="flex">
                                     <DatePicker type="datetime-local" name="event_at" id="eventAt"
-                                                v-model="evtAt" />
+                                                v-model="evtAt" aria-required="true" />
                                     <Button type="button" class="ms-1"
                                             @click="evtAt = getDateTimeLocalString(new Date())">Now
                                     </Button>
@@ -98,15 +99,29 @@ const evtEnd = ref(event?.event_end ?? '');
                             <div class="grid gap-2 w-60">
                                 <Label for="eventFor">Event For</Label>
                                 <Select id="eventFor" :options="children" :default-value="defaultChild" v-model="evtFor"
-                                        placeholder="event for" />
+                                        placeholder="event for" required />
                                 <input type="hidden" name="event_child_id" v-model="evtFor.key" />
                             </div>
 
                             <div class="grid gap-2 w-60">
                                 <Label for="eventType">Event Type</Label>
-                                <Select id='eventType' :options="evtTypes" v-model="evtType" placeholder="event type" />
+                                <Select id='eventType' :options="evtTypes" v-model="evtType" placeholder="event type"
+                                        required />
                                 <input type="hidden" name="type" v-model="evtType.key" />
                             </div>
+
+                            <template v-if="Object.keys(eventTypeDetails).includes(evtType.value)">
+                                <template v-for="(v,k) in eventTypeDetails[evtType.value]" :key="k">
+                                    <div class="grid gap-2 w-60">
+                                        <Label for="eventType">
+                                            {{ k.toString().charAt(0).toUpperCase() + k.toString().substring(1) }}
+                                            ({{ v.unit }})
+                                        </Label>
+                                        <Input :name="'details['+k+'][v]'" type="number" step="any" :placeholder="v.placeholder" :default-value="event.details[k]" />
+                                        <Input :name="'details['+k+'][unit]'" type="text" :default-value="v.unit" />
+                                    </div>
+                                </template>
+                            </template>
 
                             <div class="grid gap-2 w-60">
                                 <Label for="eventEnd">Event End</Label>

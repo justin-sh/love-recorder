@@ -27,6 +27,7 @@ class EventResource extends JsonResource
             'id'=>$this->resource->id,
             'for'=>$this->resource->child->name,
             'type'=> $this->resource->type->name,
+            'details'=> $this->resource->details,
             'event_at'=>$this->resource->event_at->toDateTimeString('minute'),
             'event_at_hr'=> ($y? "{$y}y " : '' ) . ($m? "{$m}m " : '' ) . ($d+1) . 'd',
             'event_end'=>$this->resource->event_end?->toDateTimeString('minute'),

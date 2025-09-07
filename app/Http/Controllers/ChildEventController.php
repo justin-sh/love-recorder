@@ -8,6 +8,7 @@ use App\Models\Child;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -32,7 +33,8 @@ class ChildEventController extends Controller
         return Inertia::render('event/CreateUpdate', [
             'defaultChildId' => $request->integer('c_id'),
             'children' => Child::all(['id as key', 'name as value']),
-            'type' => collect(EventType::cases())->map(fn($e) => ['key' => $e->value, 'value' => $e->name])
+            'type' => collect(EventType::cases())->map(fn($e) => ['key' => $e->value, 'value' => $e->name]),
+            'details' => Event::EVENT_DETAILS
         ]);
     }
 
@@ -41,7 +43,17 @@ class ChildEventController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $details = [];
+        if (!empty($dd = $request->json('details'))) {
+            foreach ($dd as $k => $v) {
+                if (!empty(trim($k)) && !empty(trim($v['v']))) {
+                    $details[trim($k)] = $v;
+                }
+            }
+        }
+
         $event = new Event($request->json()->all());
+        $event->details = $details;
         $event->save();
 
         return to_route('event.list');
@@ -66,7 +78,8 @@ class ChildEventController extends Controller
         return Inertia::render('event/CreateUpdate', [
             'event' => new EventResource($event),
             'children' => $data,
-            'type' => collect(EventType::cases())->map(fn($e) => ['key' => $e->value, 'value' => $e->name])
+            'type' => collect(EventType::cases())->map(fn($e) => ['key' => $e->value, 'value' => $e->name]),
+            'details' => Event::EVENT_DETAILS
         ]);
     }
 
@@ -75,7 +88,16 @@ class ChildEventController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $details = [];
+        if (!empty($dd = $request->json('details'))) {
+            foreach ($dd as $k => $v) {
+                if (!empty(trim($k)) && !empty(trim($v['v']))) {
+                    $details[trim($k)] = $v;
+                }
+            }
+        }
         $event = Event::find($id);
+        $event->details = $details;
         $event->update($request->json()->all());
 
         return to_route('event.list');
