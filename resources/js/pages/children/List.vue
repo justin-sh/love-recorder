@@ -12,7 +12,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 ];
 
 const page = usePage();
-const children = page.props.children.data as Child[];
+const children = page.props.children as Child[];
 
 const gotoAddEvent = function(child:Child) {
     router.get('/event/add', {c_id: child.id})

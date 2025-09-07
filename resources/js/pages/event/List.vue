@@ -16,7 +16,7 @@ const gotoEditEvent = function(event) {
 };
 
 const page = usePage();
-const events = page.props.events.data;
+const events = page.props.events;
 </script>
 
 <template>
@@ -75,6 +75,7 @@ const events = page.props.events.data;
                 </tr>
                 </tbody>
             </table>
+
         </div>
     </AppLayout>
 </template>
