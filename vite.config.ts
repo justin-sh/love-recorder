@@ -24,9 +24,19 @@ export default defineConfig({
         rollupOptions:{
             output:{
                 manualChunks(id){
-                    if (id.includes('node_modules')) {
-                        return 'vendor';
-                    }
+                    // if(id.includes('node_modules/es-toolkit')){
+                    //     return 'est';
+                    // }
+                    // if(id.includes('node_modules/lucide-vue-next')){
+                    //     return 'ico';
+                    // }
+                    // if(id.includes('node_modules/reka-ui')){
+                    //     return 'rui';
+                    // }
+                    // if (id.includes('node_modules')) {
+                    //     //     return 'vendor';
+                    //     console.log(id)
+                    // }
                     return 'app';
                 }
             }
