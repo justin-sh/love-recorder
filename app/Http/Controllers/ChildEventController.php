@@ -9,6 +9,7 @@ use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,12 +19,12 @@ class ChildEventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): AnonymousResourceCollection | Response
+    public function index(Request $request): AnonymousResourceCollection|Response
     {
 
         $data = Event::query()->orderByDesc('event_at')->orderByDesc('id')->cursorPaginate(20);
 
-        if($request->wantsJson()){
+        if ($request->wantsJson()) {
             return EventResource::collection($data);
         }
 
@@ -51,15 +52,16 @@ class ChildEventController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $details = [];
-        if (!empty($dd = $request->json('details'))) {
-            foreach ($dd as $k => $v) {
-                if (!empty(trim($k)) && !empty(trim($v['v']))) {
-                    $details[trim($k)] = $v;
-                }
+        $req = $request->json()->all();
+        foreach (Arr::get($req, 'details', []) as $k => $v) {
+            if (!empty(trim($k)) && !empty(trim($v['v']))) {
+                $details[trim($k)] = $v;
             }
         }
 
-        $event = new Event($request->json()->all());
+        Arr::forget($req, 'details');
+
+        $event = new Event($req);
         $event->details = $details;
         $event->save();
 

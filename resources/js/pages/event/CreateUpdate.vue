@@ -117,8 +117,8 @@ const evtEnd = ref(event?.event_end ?? '');
                                             {{ k.toString().charAt(0).toUpperCase() + k.toString().substring(1) }}
                                             ({{ v.unit }})
                                         </Label>
-                                        <Input :name="'details['+k+'][v]'" type="number" step="any" :placeholder="v.placeholder" :default-value="event.details[k]" />
-                                        <Input :name="'details['+k+'][unit]'" type="text" :default-value="v.unit" />
+                                        <Input :name="'details['+k+'][v]'" type="number" step="any" :placeholder="v.placeholder" :default-value="event?.details[k]" />
+                                        <Input :name="'details['+k+'][unit]'" type="hidden" :default-value="v.unit" />
                                     </div>
                                 </template>
                             </template>

@@ -28,7 +28,7 @@ class Event extends Model
     ];
 
     protected $attributes = [
-        'details' => []
+        'details' => '{}'
     ];
 
     protected $casts = [

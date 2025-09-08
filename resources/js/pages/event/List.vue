@@ -3,6 +3,7 @@ import type { BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
+import Loading from '@/components/Loading.vue';
 import { ref, useTemplateRef } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 import axios from 'axios';
@@ -22,6 +23,7 @@ const gotoEditEvent = function(event) {
 
 const page = usePage();
 const events = ref(page.props.events.data);
+const loading = ref(false)
 
 
 useIntersectionObserver(nextPage, ([{ isIntersecting }]) => {
@@ -30,12 +32,14 @@ useIntersectionObserver(nextPage, ([{ isIntersecting }]) => {
     }
 
     // console.log(page.props.events.links.next)
+    loading.value = true
     axios.get(page.props.events.links.next).then((response) => {
         // console.log(response.data);
 
         events.value = [...events.value, ...response.data.data];
         page.props.events.links = response.data.links;
 
+        loading.value = false
     });
 });
 </script>
@@ -97,7 +101,9 @@ useIntersectionObserver(nextPage, ([{ isIntersecting }]) => {
                 </tr>
                 </tbody>
             </table>
-            <div ref="nextPage"></div>
+            <div ref="nextPage" class="flex justify-center mt-3">
+                <Loading v-if="loading" />
+            </div>
         </div>
     </AppLayout>
 </template>
