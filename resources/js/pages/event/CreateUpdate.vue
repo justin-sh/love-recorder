@@ -17,7 +17,7 @@ import { ref } from 'vue';
 const page = usePage();
 const children = page.props.children as Child[];
 const evtTypes = page.props.type;
-const event = page.props.event?.data;
+const event = page.props.event;
 const eventTypeDetails = page.props.details;
 
 const defaultChild = children.find((c) => c.value === (event?.for ?? page.props.defaultChildId)) ?? { key: '' };
@@ -117,7 +117,7 @@ const evtEnd = ref(event?.event_end ?? '');
                                             {{ k.toString().charAt(0).toUpperCase() + k.toString().substring(1) }}
                                             ({{ v.unit }})
                                         </Label>
-                                        <Input :name="'details['+k+'][v]'" type="number" step="any" :placeholder="v.placeholder" :default-value="event?.details[k]" />
+                                        <Input :name="'details['+k+'][v]'" type="number" step="any" :placeholder="v.placeholder" :default-value="event?.details[k]['v']" />
                                         <Input :name="'details['+k+'][unit]'" type="hidden" :default-value="v.unit" />
                                     </div>
                                 </template>
