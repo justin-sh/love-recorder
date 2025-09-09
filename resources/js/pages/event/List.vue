@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Loading from '@/components/Loading.vue';
 import { ref, useTemplateRef } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
-import axios from 'axios';
+import axios from '@/lib/axios';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
