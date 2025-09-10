@@ -31,7 +31,7 @@ const child = ref();
 const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
 const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
 
-const setChartOptions = () => {
+const setWeightChartOptions = () => {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--color-chart-1');
     const textColorSecondary = documentStyle.getPropertyValue('--color-chart-2');
@@ -68,13 +68,49 @@ const setChartOptions = () => {
     };
 };
 
-const setChartData = (data: object[]) => {
+const setFeedingChartOptions = () => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--color-chart-1');
+    const textColorSecondary = documentStyle.getPropertyValue('--color-chart-2');
+    const surfaceBorder = documentStyle.getPropertyValue('--color-border');
+
+    return {
+        maintainAspectRatio: false,
+        aspectRatio: 0.6,
+        plugins: {
+            legend: {
+                labels: {
+                    color: textColor
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder
+                }
+            },
+            y: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder
+                }
+            }
+        }
+    };
+};
+
+const setWeightChartData = (data: object[]) => {
     const documentStyle = getComputedStyle(document.documentElement);
 
     const labels = [];
     const wData = [];
     let prev = '';
-
 
     data.forEach(e => {
         if (prev !== '') {
@@ -96,11 +132,6 @@ const setChartData = (data: object[]) => {
         wData.push(e.details.qty.v);
     });
 
-    // labels.push('2025-09-19');
-    // wData.push(NaN);
-    // labels.push('2025-09-29');
-    // wData.push(3200);
-
     return {
         labels: labels,
         datasets: [
@@ -121,15 +152,77 @@ const setChartData = (data: object[]) => {
     };
 };
 
-const weightOptions = setChartOptions();
-const weightData = ref(setChartData(props.data));
+const setFeedingChartData = (data: object) => {
+    const documentStyle = getComputedStyle(document.documentElement);
+
+    const labels = Object.keys(data);
+    const wData = {'br':[], 'bo':[], 'wee':[], 'poo':[]};
+
+    labels.forEach(e => {
+        wData['br'].push(data[e]['breast_feeding']??NaN);
+        wData['bo'].push(data[e]['bottle_feeding']??NaN);
+        wData['wee'].push(data[e]['wee']??NaN);
+        wData['poo'].push(data[e]['poo']??NaN);
+    });
+
+    return {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Breast Feeding',
+                fill: false,
+                borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+                yAxisID: 'y',
+                tension: 0.4,
+                data: wData['br'],
+                spanGaps: true
+            },
+            {
+                label: 'Poo',
+                fill: false,
+                borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+                yAxisID: 'y',
+                tension: 0.4,
+                data: wData['poo'],
+                spanGaps: true
+            },
+            {
+                label: 'Wee',
+                fill: false,
+                borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+                yAxisID: 'y',
+                tension: 0.4,
+                data: wData['wee'],
+                spanGaps: true
+            },
+            {
+                label: 'Bottle Feeding',
+                fill: false,
+                borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+                yAxisID: 'y',
+                tension: 0.4,
+                data: wData['bo'],
+                spanGaps: true
+            }
+        ]
+    };
+};
+
+const weightOptions = setWeightChartOptions();
+const weightData = ref(setWeightChartData(props.data));
+const feedingOptions = setFeedingChartOptions();
+const feedingData = ref({});
 
 watch(child, async function() {
     // console.log(child.value)
 
     const d = await (await axios.get(route('analysis.weight'), { params: { c_id: child.value } })).data;
     // console.log(d)
-    weightData.value = setChartData(d);
+    weightData.value = setWeightChartData(d);
+
+    const d2 = await (await axios.get(route('analysis.feeding'), { params: { c_id: child.value } })).data;
+    //console.log(d2)
+    feedingData.value = setFeedingChartData(d2);
 });
 
 // const page = usePage()
@@ -139,7 +232,7 @@ watch(child, async function() {
     <AppLayout :breadcrumbs="breadcrumbItems">
         <Head title="Analysis Weight" />
 
-        <div class="w-full md:w-5xl mt-4 px-4 py-6">
+        <div class="w-full mt-4 px-4 py-6">
             <Heading title="Analysis Weight" description="Analysis weight" />
 
             <div class="grid gap-2">
@@ -150,8 +243,12 @@ watch(child, async function() {
                 </Radiobox>
             </div>
 
-            <VueChart type="line" :data="weightData" :options="weightOptions" class="h-[20rem] md:h-[35rem]" />
+            <div class="w-full flex flex-col md:flex-row px-8">
+                <VueChart type="line" :data="weightData" :options="weightOptions" class="md:w-2/5 h-[20rem] md:h-[30rem]" />
+                <VueChart type="line" :data="feedingData" :options="feedingOptions" class="md:w-2/5 h-[20rem] md:h-[30rem]" />
+            </div>
         </div>
+
     </AppLayout>
 </template>
 

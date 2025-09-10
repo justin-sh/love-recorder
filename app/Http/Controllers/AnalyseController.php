@@ -10,6 +10,7 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -48,6 +49,38 @@ class AnalyseController extends Controller
             'children' => $children,
             'data' => EventResource::collection($data)
         ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function feeding(Request $request)
+    {
+        $children = Child::all(['id as key', 'name as value']);
+        $childId = $request->integer('c_id');
+        if ($childId == 0) {
+            $childId = $children->first()?->key ?? 0;
+        }
+        $data = Event::query()
+            ->select(DB::raw('date(event_at) as `day`'), 'type', DB::raw('count(*) as `count`'))
+            ->where('event_child_id', 3)
+            ->whereIn('type', [EventType::BottleFeeding->value, EventType::BreastFeeding->value,EventType::Wee->value,EventType::Poo->value])
+            ->groupBy([DB::raw('date(event_at)'), 'type'])
+            ->orderBy('day')
+            ->orderBy('type')
+            ->get();
+
+        $rv = $data->groupBy('day')->map(function($v){
+            $tc = [];
+            foreach($v as $x){
+                $tc[$x->type->value] = $x->count;
+            }
+            return $tc;
+        });
+        // Log::debug($rv);
+
+        return json_encode($rv);
+        
     }
 
     /**
