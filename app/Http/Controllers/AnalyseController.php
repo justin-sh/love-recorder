@@ -63,7 +63,7 @@ class AnalyseController extends Controller
         }
         $data = Event::query()
             ->select(DB::raw('date(event_at) as `day`'), 'type', DB::raw('count(*) as `count`'))
-            ->where('event_child_id', 3)
+            ->where('event_child_id', $childId)
             ->whereIn('type', [EventType::BottleFeeding->value, EventType::BreastFeeding->value,EventType::Wee->value,EventType::Poo->value])
             ->groupBy([DB::raw('date(event_at)'), 'type'])
             ->orderBy('day')

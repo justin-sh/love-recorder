@@ -14,10 +14,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Analysis',
         href: ''
-    },
-    {
-        title: 'Analysis Weight',
-        href: '/analysis/weight'
     }
 ];
 
@@ -195,7 +191,7 @@ const setFeedingChartData = (data: object) => {
                 data: wData['wee'],
                 spanGaps: true
             },
-            {
+            /*{
                 label: 'Bottle Feeding',
                 fill: false,
                 borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
@@ -203,7 +199,7 @@ const setFeedingChartData = (data: object) => {
                 tension: 0.4,
                 data: wData['bo'],
                 spanGaps: true
-            }
+            }*/
         ]
     };
 };
@@ -230,12 +226,12 @@ watch(child, async function() {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Analysis Weight" />
+        <Head title="Analysis" />
 
-        <div class="w-full mt-4 px-4 py-6">
-            <Heading title="Analysis Weight" description="Analysis weight" />
+        <div class="w-full mt-0 md:mt-4 pe-4 py-2">
+            <Heading title="Analysis" description="Analysis" class="ps-4 mb-0!" />
 
-            <div class="grid gap-2">
+            <div class="grid gap-2 justify-center">
                 <Label for="child">Child</Label>
                 <Radiobox id="child" :default-value="children?.[0].key" v-model="child">
                     <RadioboxItem :label="child.value" name="child" :value="child.key" :id="'child-' + child.key"
@@ -243,9 +239,9 @@ watch(child, async function() {
                 </Radiobox>
             </div>
 
-            <div class="w-full flex flex-col md:flex-row px-8">
-                <VueChart type="line" :data="weightData" :options="weightOptions" class="md:w-2/5 h-[20rem] md:h-[30rem]" />
-                <VueChart type="line" :data="feedingData" :options="feedingOptions" class="md:w-2/5 h-[20rem] md:h-[30rem]" />
+            <div class="w-full flex flex-col md:flex-row px-4 mt-4 justify-center gap-4 mx-6">
+                <VueChart type="line" :data="weightData" :options="weightOptions" class="grow h-[18rem] md:h-[30rem] w-full md:w-1/2" />
+                <VueChart type="line" :data="feedingData" :options="feedingOptions" class="grow h-[18rem] md:h-[30rem]" />
             </div>
         </div>
 
