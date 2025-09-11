@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BreadcrumbItem, Child, User } from '@/types';
+import type { BreadcrumbItem, Child } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';

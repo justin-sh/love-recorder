@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { Radiobox } from '@/components/ui/radiobox';
 import { Label } from '@/components/ui/label';
 import { VueChart } from '@/components/ui/chart';
@@ -207,7 +207,7 @@ const setFeedingChartData = (data: object) => {
 const weightOptions = setWeightChartOptions();
 const weightData = ref(setWeightChartData(props.data));
 const feedingOptions = setFeedingChartOptions();
-const feedingData = ref({});
+const feedingData = ref(setFeedingChartData({}));
 
 watch(child, async function() {
     // console.log(child.value)
@@ -235,7 +235,7 @@ watch(child, async function() {
                 <Label for="child">Child</Label>
                 <Radiobox id="child" :default-value="children?.[0].key" v-model="child">
                     <RadioboxItem :label="child.value" name="child" :value="child.key" :id="'child-' + child.key"
-                                  v-for="child in children" />
+                                  v-for="child in children" :key="child.key"/>
                 </Radiobox>
             </div>
 

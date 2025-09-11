@@ -23,7 +23,7 @@ export default defineConfig({
     build:{
         rollupOptions:{
             output:{
-                manualChunks(id){
+                //manualChunks(id){
                     // if(id.includes('node_modules/es-toolkit')){
                     //     return 'est';
                     // }
@@ -37,8 +37,8 @@ export default defineConfig({
                     //     //     return 'vendor';
                     //     console.log(id)
                     // }
-                    return 'app';
-                }
+                //    return 'app';
+                //}
             }
         }
     }
