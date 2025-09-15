@@ -1,17 +1,16 @@
 <script setup lang="ts">
-
-import { BreadcrumbItem, Child } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Form, Head, usePage } from '@inertiajs/vue3';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { LoaderCircle } from 'lucide-vue-next';
+import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
-import Heading from '@/components/Heading.vue';
 import { DatePicker } from '@/components/ui/datepicker';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { BreadcrumbItem, Child } from '@/types';
+import { Form, Head, usePage } from '@inertiajs/vue3';
+import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 const page = usePage();
@@ -28,23 +27,23 @@ const isEdit = event?.id > 0;
 const breadcrumbItems: BreadcrumbItem[] = [];
 
 if (isEdit) {
-    breadcrumbItems.push(...[
-        {
-            title: 'List children events',
-            href: route('event.list')
-        },
-        {
-            title: isEdit ? 'Edit child event' : 'Create new child event',
-            href: isEdit ? route('event.update', event?.id) : route('event.create')
-        }
-    ]);
-} else {
     breadcrumbItems.push(
-        {
-            title: 'Create new child event',
-            href: route('event.create')
-        }
+        ...[
+            {
+                title: 'List children events',
+                href: route('event.list'),
+            },
+            {
+                title: isEdit ? 'Edit child event' : 'Create new child event',
+                href: isEdit ? route('event.update', event?.id) : route('event.create'),
+            },
+        ],
     );
+} else {
+    breadcrumbItems.push({
+        title: 'Create new child event',
+        href: route('event.create'),
+    });
 }
 
 function getDateTimeLocalString(d: Date) {
@@ -72,64 +71,69 @@ const evtEnd = ref(event?.event_end ?? '');
                 <section class="max-w-xl space-y-12">
                     <Form
                         method="post"
-                        :action="isEdit? route( 'event.update' , event?.id ) : route('event.store')"
+                        :action="isEdit ? route('event.update', event?.id) : route('event.store')"
                         v-slot="{ errors, processing }"
                         class="flex flex-col gap-6"
                     >
                         <div class="grid gap-6">
-
-                            <div class="grid gap-2 w-60" v-if="isEdit">
+                            <div class="grid w-60 gap-2" v-if="isEdit">
                                 <Label for="eventAt">Event Id</Label>
                                 <div class="flex">
                                     {{ event?.id }}
                                 </div>
                             </div>
 
-                            <div class="grid gap-2 w-60">
+                            <div class="grid w-60 gap-2">
                                 <Label for="eventAt">Event At</Label>
                                 <div class="flex">
-                                    <DatePicker type="datetime-local" name="event_at" id="eventAt"
-                                                v-model="evtAt" aria-required="true" />
-                                    <Button type="button" class="ms-1"
-                                            @click="evtAt = getDateTimeLocalString(new Date())">Now
-                                    </Button>
+                                    <DatePicker type="datetime-local" name="event_at" id="eventAt" v-model="evtAt" aria-required="true" />
+                                    <Button type="button" class="ms-1" @click="evtAt = getDateTimeLocalString(new Date())">Now </Button>
                                 </div>
                             </div>
 
-                            <div class="grid gap-2 w-60">
+                            <div class="grid w-60 gap-2">
                                 <Label for="eventFor">Event For</Label>
-                                <Select id="eventFor" :options="children" :default-value="defaultChild" v-model="evtFor"
-                                        placeholder="event for" required />
+                                <Select
+                                    id="eventFor"
+                                    :options="children"
+                                    :default-value="defaultChild"
+                                    v-model="evtFor"
+                                    placeholder="event for"
+                                    required
+                                />
                                 <input type="hidden" name="event_child_id" v-model="evtFor.key" />
                             </div>
 
-                            <div class="grid gap-2 w-60">
+                            <div class="grid w-60 gap-2">
                                 <Label for="eventType">Event Type</Label>
-                                <Select id='eventType' :options="evtTypes" v-model="evtType" placeholder="event type"
-                                        required />
+                                <Select id="eventType" :options="evtTypes" v-model="evtType" placeholder="event type" required />
                                 <input type="hidden" name="type" v-model="evtType.key" />
                             </div>
 
                             <template v-if="Object.keys(eventTypeDetails).includes(evtType.value)">
-                                <template v-for="(v,k) in eventTypeDetails[evtType.value]" :key="k">
-                                    <div class="grid gap-2 w-60">
+                                <template v-for="(v, k) in eventTypeDetails[evtType.value]" :key="k">
+                                    <div class="grid w-60 gap-2">
                                         <Label for="eventType">
                                             {{ k.toString().charAt(0).toUpperCase() + k.toString().substring(1) }}
                                             ({{ v.unit }})
                                         </Label>
-                                        <Input :name="'details['+k+'][v]'" type="number" step="any" :placeholder="v.placeholder" :default-value="event?.details[k]&&event?.details[k]['v']" />
-                                        <Input :name="'details['+k+'][unit]'" type="hidden" :default-value="v.unit" />
+                                        <Input
+                                            :name="'details[' + k + '][v]'"
+                                            type="number"
+                                            step="any"
+                                            :placeholder="v.placeholder"
+                                            :default-value="event?.details[k] && event?.details[k]['v']"
+                                        />
+                                        <Input :name="'details[' + k + '][unit]'" type="hidden" :default-value="v.unit" />
                                     </div>
                                 </template>
                             </template>
 
-                            <div class="grid gap-2 w-60">
+                            <div class="grid w-60 gap-2">
                                 <Label for="eventEnd">Event End</Label>
                                 <div class="flex">
                                     <DatePicker type="datetime-local" name="event_end" id="eventEnd" v-model="evtEnd" />
-                                    <Button type="button" class="ms-1"
-                                            @click="evtEnd = getDateTimeLocalString(new Date())">Now
-                                    </Button>
+                                    <Button type="button" class="ms-1" @click="evtEnd = getDateTimeLocalString(new Date())">Now </Button>
                                 </div>
                             </div>
 
@@ -142,7 +146,7 @@ const evtEnd = ref(event?.event_end ?? '');
 
                             <div class="flex items-center gap-4">
                                 <Button type="submit" tabindex="5" :disabled="processing">
-                                    <LoaderCircle v-if="processing" class="w-4 h-4 animate-spin" />
+                                    <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
                                     {{ isEdit ? 'Update' : 'Add' }} child event
                                 </Button>
                             </div>
@@ -154,6 +158,4 @@ const evtEnd = ref(event?.event_end ?? '');
     </AppLayout>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
