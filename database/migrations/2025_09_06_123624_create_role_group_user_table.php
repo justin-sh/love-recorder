@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('role_group_user', function (Blueprint $table) {
             $table->foreignIdFor(Role::class)->constrained();
             $table->foreignId('group_user_id');
-            $table->timestamps();
         });
     }
 
