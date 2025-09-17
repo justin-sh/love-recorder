@@ -1,8 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -11,18 +10,14 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/tenant', function (\Illuminate\Http\Request $request) {
-
-        $user = $request->user();
+    Route::get('/tenant', function (Request $request) {
 
         return Inertia::render('Tenant', [
-            'tenant' => $user->groups()->get(['groups.id', 'name'])
+            'tenant' => $request->user()->groups()->get(['groups.id', 'name'])
         ]);
     })->name('tenant');
 
     Route::prefix('{tenant}')->get('dashboard', function () {
-        $uGroups = Auth::user()->groups()->get();
-        Log::debug(count($uGroups));
         return Inertia::render('Dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 });

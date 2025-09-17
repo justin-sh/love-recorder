@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use App\Models\Tenant;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class HandleTenant
@@ -18,10 +17,9 @@ class HandleTenant
     public function handle(Request $request, Closure $next): Response
     {
         $tenant = $request->route('tenant');
-
-        Log::debug('tenant : ' . $tenant);
-
-        Tenant::setId($tenant);
+        if (!empty($tenant)) {
+            Tenant::setId($tenant);
+        }
 
         return $next($request);
     }
