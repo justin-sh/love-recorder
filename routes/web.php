@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -8,6 +10,8 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('dashboard', function () {
+    $uGroups = Auth::user()->groups()->get();
+    Log::debug(count($uGroups));
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

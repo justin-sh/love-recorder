@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\RoleName;
 use App\Http\Controllers\Controller;
+use App\Models\Group;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -41,6 +44,14 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        $defaultGroup = new Group(['name'=>$user->name . '\'s default group']);
+        $defaultGroup->save();
+
+        $user->groups()->attach($defaultGroup);
+
+        $gManager = Role::query()->where('name', RoleName::GROUP_ADMIN->value)->first();
+        $user->groups()->first()->pivot->roles()->attach($gManager);
 
         event(new Registered($user));
 

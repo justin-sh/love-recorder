@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role_group_user', function (Blueprint $table) {
+        Schema::create('group_user_role', function (Blueprint $table) {
             $table->foreignIdFor(Role::class)->constrained();
             $table->foreignId('group_user_id');
         });
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role_group_user');
+        Schema::dropIfExists('group_user_role');
     }
 };
