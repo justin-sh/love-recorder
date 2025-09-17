@@ -4,7 +4,7 @@ use App\Http\Controllers\Children\ChildrenManagementController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('{tenant}')->group(function () {
     Route::redirect('children', '/children/list');
 
     Route::get('children', [ChildrenManagementController::class, 'list'])->name('children.list');

@@ -9,11 +9,23 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::get('dashboard', function () {
-    $uGroups = Auth::user()->groups()->get();
-    Log::debug(count($uGroups));
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+
+    Route::get('/tenant', function (\Illuminate\Http\Request $request) {
+
+        $user = $request->user();
+
+        return Inertia::render('Tenant', [
+            'tenant' => $user->groups()->get(['groups.id', 'name'])
+        ]);
+    })->name('tenant');
+
+    Route::prefix('{tenant}')->get('dashboard', function () {
+        $uGroups = Auth::user()->groups()->get();
+        Log::debug(count($uGroups));
+        return Inertia::render('Dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
+});
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

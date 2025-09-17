@@ -7,18 +7,19 @@ import type { BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { useIntersectionObserver } from '@vueuse/core';
 import { ref, useTemplateRef } from 'vue';
+import { getTenantId } from '@/lib/utils';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'List children events',
-        href: route('event.list'),
-    },
+        href: route('event.list', getTenantId())
+    }
 ];
 
 const nextPage = useTemplateRef('nextPage');
 
-const gotoEditEvent = function (event) {
-    router.get(route('event.edit', event.id));
+const gotoEditEvent = function(event) {
+    router.get(route('event.edit', [getTenantId(), event.id]));
 };
 
 const page = usePage();
@@ -49,66 +50,70 @@ useIntersectionObserver(nextPage, ([{ isIntersecting }]) => {
         <div class="px-4 pb-4">
             <table class="mt-4 w-full table-auto border border-gray-400 dark:border-gray-500">
                 <thead class="hidden md:table-header-group">
-                    <tr>
-                        <th class="border border-gray-300 py-2 dark:border-gray-600">Event Id</th>
-                        <th class="border border-gray-300 dark:border-gray-600">Child</th>
-                        <th class="border border-gray-300 dark:border-gray-600">Type</th>
-                        <th class="border border-gray-300 dark:border-gray-600">Details</th>
-                        <th class="border border-gray-300 dark:border-gray-600">At</th>
-                        <th class="border border-gray-300 dark:border-gray-600">End</th>
-                        <th class="border border-gray-300 dark:border-gray-600">Note</th>
-                        <th class="border border-gray-300 dark:border-gray-600">Action</th>
-                    </tr>
+                <tr>
+                    <th class="border border-gray-300 py-2 dark:border-gray-600">Event Id</th>
+                    <th class="border border-gray-300 dark:border-gray-600">Child</th>
+                    <th class="border border-gray-300 dark:border-gray-600">Type</th>
+                    <th class="border border-gray-300 dark:border-gray-600">Details</th>
+                    <th class="border border-gray-300 dark:border-gray-600">At</th>
+                    <th class="border border-gray-300 dark:border-gray-600">End</th>
+                    <th class="border border-gray-300 dark:border-gray-600">Note</th>
+                    <th class="border border-gray-300 dark:border-gray-600">Action</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="c in events" :key="c.id" class="flex flex-col hover:bg-accent md:table-row">
-                        <td
-                            class="flex border-0 border-gray-300 py-2 ps-2 text-center before:font-bold md:table-cell md:border dark:border-gray-600"
-                            data-title="Event Id"
-                        >
-                            #{{ c.id }} [{{ c.event_at_hr }}]
-                        </td>
-                        <td class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600" data-title="For">
-                            {{ c.for }}
-                        </td>
-                        <td
-                            class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600"
-                            data-title="Type"
-                        >
-                            {{ c.type }}
-                        </td>
-                        <td
-                            class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600"
-                            data-title="Details"
-                        >
-                            <template v-if="c.details && Object.keys(c.details).length == 1 && Object.keys(c.details).includes('qty')">
-                                {{ c.details['qty']['v'] + c.details['qty']['unit'] }}
+                <tr v-for="c in events" :key="c.id" class="flex flex-col hover:bg-accent md:table-row">
+                    <td
+                        class="flex border-0 border-gray-300 py-2 ps-2 text-center before:font-bold md:table-cell md:border dark:border-gray-600"
+                        data-title="Event Id"
+                    >
+                        #{{ c.id }} [{{ c.event_at_hr }}]
+                    </td>
+                    <td class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600"
+                        data-title="For">
+                        {{ c.for }}
+                    </td>
+                    <td
+                        class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600"
+                        data-title="Type"
+                    >
+                        {{ c.type }}
+                    </td>
+                    <td
+                        class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600"
+                        data-title="Details"
+                    >
+                        <template
+                            v-if="c.details && Object.keys(c.details).length == 1 && Object.keys(c.details).includes('qty')">
+                            {{ c.details['qty']['v'] + c.details['qty']['unit'] }}
+                        </template>
+                        <template v-else>
+                            <template v-for="(v, k) in c.details">
+                                {{ k + ': ' + v['v'] + v['unit'] }}
                             </template>
-                            <template v-else>
-                                <template v-for="(v, k) in c.details">
-                                    {{ k + ': ' + v['v'] + v['unit'] }}
-                                </template>
-                            </template>
-                        </td>
-                        <td class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600" data-title="At">
-                            {{ c.event_at }}
-                        </td>
-                        <td class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600" data-title="End">
-                            {{ c.event_end }}
-                        </td>
-                        <td
-                            class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600"
-                            data-title="Note"
-                        >
-                            {{ c.note }}
-                        </td>
-                        <td
-                            class="flex border-0 border-b border-gray-300 ps-2 text-center before:font-bold md:table-cell md:border dark:border-gray-600"
-                            data-title="Action"
-                        >
-                            <Button style="cursor: pointer" @click="gotoEditEvent(c)">Edit Event</Button>
-                        </td>
-                    </tr>
+                        </template>
+                    </td>
+                    <td class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600"
+                        data-title="At">
+                        {{ c.event_at }}
+                    </td>
+                    <td class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600"
+                        data-title="End">
+                        {{ c.event_end }}
+                    </td>
+                    <td
+                        class="flex border-0 border-gray-300 ps-2 before:font-bold md:table-cell md:border dark:border-gray-600"
+                        data-title="Note"
+                    >
+                        {{ c.note }}
+                    </td>
+                    <td
+                        class="flex border-0 border-b border-gray-300 ps-2 text-center before:font-bold md:table-cell md:border dark:border-gray-600"
+                        data-title="Action"
+                    >
+                        <Button style="cursor: pointer" @click="gotoEditEvent(c)">Edit Event</Button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
             <div ref="nextPage" class="mt-3 flex justify-center">

@@ -7,36 +7,37 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { ChartArea, LayoutGrid, Notebook, NotebookPen, UserRoundPlus, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import { getTenantId } from '@/lib/utils';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: '/dashboard',
+        href: route('dashboard', getTenantId()),
         icon: LayoutGrid,
     },
     {
         title: 'List Children Events',
-        href: route('event.list'),
+        href: route('event.list', getTenantId()),
         icon: Notebook,
     },
     {
         title: 'List Children',
-        href: route('children.list'),
+        href: route('children.list', getTenantId()),
         icon: Users,
     },
     {
         title: 'Analysis',
-        href: route('analysis.weight'),
+        href: route('analysis.weight', getTenantId()),
         icon: ChartArea,
     },
     {
         title: 'Add Child Event',
-        href: route('event.create'),
+        href: route('event.create', getTenantId()),
         icon: NotebookPen,
     },
     {
         title: 'Add Child',
-        href: route('children.create'),
+        href: route('children.create', getTenantId()),
         icon: UserRoundPlus,
     },
 ];
@@ -61,7 +62,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
+                        <Link :href="route('dashboard', getTenantId())">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>

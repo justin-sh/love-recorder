@@ -12,6 +12,7 @@ import { BreadcrumbItem, Child } from '@/types';
 import { Form, Head, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
+import { getTenantId } from '@/lib/utils';
 
 const page = usePage();
 const children = page.props.children as Child[];
@@ -31,18 +32,18 @@ if (isEdit) {
         ...[
             {
                 title: 'List children events',
-                href: route('event.list'),
+                href: route('event.list', getTenantId())
             },
             {
                 title: isEdit ? 'Edit child event' : 'Create new child event',
-                href: isEdit ? route('event.update', event?.id) : route('event.create'),
-            },
-        ],
+                href: isEdit ? route('event.update', [getTenantId(), event?.id]) : route('event.create', getTenantId())
+            }
+        ]
     );
 } else {
     breadcrumbItems.push({
         title: 'Create new child event',
-        href: route('event.create'),
+        href: route('event.create', getTenantId())
     });
 }
 
@@ -71,7 +72,7 @@ const evtEnd = ref(event?.event_end ?? '');
                 <section class="max-w-xl space-y-12">
                     <Form
                         method="post"
-                        :action="isEdit ? route('event.update', event?.id) : route('event.store')"
+                        :action="isEdit ? route('event.update', [getTenantId(), event?.id]) : route('event.store', getTenantId())"
                         v-slot="{ errors, processing }"
                         class="flex flex-col gap-6"
                     >
@@ -86,8 +87,11 @@ const evtEnd = ref(event?.event_end ?? '');
                             <div class="grid w-60 gap-2">
                                 <Label for="eventAt">Event At</Label>
                                 <div class="flex">
-                                    <DatePicker type="datetime-local" name="event_at" id="eventAt" v-model="evtAt" aria-required="true" />
-                                    <Button type="button" class="ms-1" @click="evtAt = getDateTimeLocalString(new Date())">Now </Button>
+                                    <DatePicker type="datetime-local" name="event_at" id="eventAt" v-model="evtAt"
+                                                aria-required="true" />
+                                    <Button type="button" class="ms-1"
+                                            @click="evtAt = getDateTimeLocalString(new Date())">Now
+                                    </Button>
                                 </div>
                             </div>
 
@@ -106,7 +110,8 @@ const evtEnd = ref(event?.event_end ?? '');
 
                             <div class="grid w-60 gap-2">
                                 <Label for="eventType">Event Type</Label>
-                                <Select id="eventType" :options="evtTypes" v-model="evtType" placeholder="event type" required />
+                                <Select id="eventType" :options="evtTypes" v-model="evtType" placeholder="event type"
+                                        required />
                                 <input type="hidden" name="type" v-model="evtType.key" />
                             </div>
 
@@ -124,7 +129,8 @@ const evtEnd = ref(event?.event_end ?? '');
                                             :placeholder="v.placeholder"
                                             :default-value="event?.details[k] && event?.details[k]['v']"
                                         />
-                                        <Input :name="'details[' + k + '][unit]'" type="hidden" :default-value="v.unit" />
+                                        <Input :name="'details[' + k + '][unit]'" type="hidden"
+                                               :default-value="v.unit" />
                                     </div>
                                 </template>
                             </template>
@@ -133,7 +139,9 @@ const evtEnd = ref(event?.event_end ?? '');
                                 <Label for="eventEnd">Event End</Label>
                                 <div class="flex">
                                     <DatePicker type="datetime-local" name="event_end" id="eventEnd" v-model="evtEnd" />
-                                    <Button type="button" class="ms-1" @click="evtEnd = getDateTimeLocalString(new Date())">Now </Button>
+                                    <Button type="button" class="ms-1"
+                                            @click="evtEnd = getDateTimeLocalString(new Date())">Now
+                                    </Button>
                                 </div>
                             </div>
 

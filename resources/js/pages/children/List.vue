@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem, Child } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
+import { getTenantId } from '@/lib/utils';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -15,7 +16,7 @@ const page = usePage();
 const children = page.props.children as Child[];
 
 const gotoAddEvent = function (child: Child) {
-    router.get('/event/add', { c_id: child.id });
+    router.get(route('event.add', getTenantId() ), { c_id: child.id });
 };
 </script>
 

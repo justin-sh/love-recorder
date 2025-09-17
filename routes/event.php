@@ -3,7 +3,7 @@
 use App\Http\Controllers\ChildEventController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('{tenant}')->group(function () {
 
     Route::get('events', [ChildEventController::class, 'index'])->name('event.list');
 
@@ -13,6 +13,5 @@ Route::middleware('auth')->group(function () {
 
     Route::get('events/{id}', [ChildEventController::class, 'edit'])->name('event.edit');
     Route::post('events/{id}', [ChildEventController::class, 'update'])->name('event.update');
-
 
 });

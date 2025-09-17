@@ -6,11 +6,11 @@ use App\Enums\EventType;
 use App\Http\Resources\EventResource;
 use App\Models\Child;
 use App\Models\Event;
+use App\Models\Tenant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -65,21 +65,13 @@ class ChildEventController extends Controller
         $event->details = $details;
         $event->save();
 
-        return to_route('event.list');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        return to_route('event.list', Tenant::getId());
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id): Response
+    public function edit(string $tenant, string $id): Response
     {
         $data = Child::all(['id as key', 'name as value']);
         $event = Event::find($id);
@@ -95,7 +87,7 @@ class ChildEventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $tenant, string $id)
     {
         $details = [];
         if (!empty($dd = $request->json('details'))) {
@@ -109,13 +101,13 @@ class ChildEventController extends Controller
         $event->details = $details;
         $event->update($request->json()->all());
 
-        return to_route('event.list');
+        return to_route('event.list', Tenant::getId());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $tenant, string $id)
     {
         //
     }

@@ -11,6 +11,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import { getTenantId } from '@/lib/utils';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -31,7 +32,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 <section class="max-w-xl space-y-12">
                     <Form
                         method="post"
-                        :action="route('children.store')"
+                        :action="route('children.store', getTenantId())"
                         :reset-on-success="['password', 'password_confirmation']"
                         v-slot="{ errors, processing }"
                         class="flex flex-col gap-6"

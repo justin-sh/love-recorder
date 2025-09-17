@@ -9,6 +9,7 @@ import axios from '@/lib/axios';
 import type { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
+import { getTenantId } from '@/lib/utils';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -167,7 +168,7 @@ const setFeedingChartData = (data: object) => {
             {
                 label: 'Breast Feeding',
                 fill: false,
-                borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+                borderColor: documentStyle.getPropertyValue('--p-sky-500'),
                 yAxisID: 'y',
                 tension: 0.4,
                 data: wData['br'],
@@ -176,7 +177,7 @@ const setFeedingChartData = (data: object) => {
             {
                 label: 'Poo',
                 fill: false,
-                borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+                borderColor: documentStyle.getPropertyValue('--p-fuchsia-300'),
                 yAxisID: 'y',
                 tension: 0.4,
                 data: wData['poo'],
@@ -185,7 +186,7 @@ const setFeedingChartData = (data: object) => {
             {
                 label: 'Wee',
                 fill: false,
-                borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+                borderColor: documentStyle.getPropertyValue('--p-emerald-500'),
                 yAxisID: 'y',
                 tension: 0.4,
                 data: wData['wee'],
@@ -212,11 +213,11 @@ const feedingData = ref(setFeedingChartData({}));
 watch(child, async function () {
     // console.log(child.value)
 
-    const d = await (await axios.get(route('analysis.weight'), { params: { c_id: child.value } })).data;
+    const d = await (await axios.get(route('analysis.weight', getTenantId()), { params: { c_id: child.value } })).data;
     // console.log(d)
     weightData.value = setWeightChartData(d);
 
-    const d2 = await (await axios.get(route('analysis.feeding'), { params: { c_id: child.value } })).data;
+    const d2 = await (await axios.get(route('analysis.feeding', getTenantId()), { params: { c_id: child.value } })).data;
     //console.log(d2)
     feedingData.value = setFeedingChartData(d2);
 });
