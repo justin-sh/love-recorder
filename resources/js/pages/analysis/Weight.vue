@@ -168,7 +168,7 @@ const setFeedingChartData = (data: object) => {
             {
                 label: 'Breast Feeding',
                 fill: false,
-                borderColor: documentStyle.getPropertyValue('--p-sky-500'),
+                borderColor: documentStyle.getPropertyValue('--p-blue-500'),
                 yAxisID: 'y',
                 tension: 0.4,
                 data: wData['br'],
@@ -177,7 +177,7 @@ const setFeedingChartData = (data: object) => {
             {
                 label: 'Poo',
                 fill: false,
-                borderColor: documentStyle.getPropertyValue('--p-fuchsia-300'),
+                borderColor: documentStyle.getPropertyValue('--p-green-500'),
                 yAxisID: 'y',
                 tension: 0.4,
                 data: wData['poo'],
@@ -186,7 +186,7 @@ const setFeedingChartData = (data: object) => {
             {
                 label: 'Wee',
                 fill: false,
-                borderColor: documentStyle.getPropertyValue('--p-emerald-500'),
+                borderColor: documentStyle.getPropertyValue('--p-red-400'),
                 yAxisID: 'y',
                 tension: 0.4,
                 data: wData['wee'],
