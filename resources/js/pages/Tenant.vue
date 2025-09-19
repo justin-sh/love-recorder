@@ -18,7 +18,7 @@ onMounted(function() {
     if (page.props.tenant.length === 1) {
         tenant.value = page.props.tenant[0].id;
 
-        setTenantId('au-' + tenant.value);
+        setTenantId(page.props.tenantPrefix + tenant.value);
         goDashboard();
     }
 });

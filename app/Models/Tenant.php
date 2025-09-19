@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
+
 class Tenant
 {
-    private function __construct(private readonly string $id = "")
+    private function __construct(private readonly string $id = '')
     {
     }
 
@@ -18,5 +20,10 @@ class Tenant
     public static function getId(): ?string
     {
         return static::$current?->id;
+    }
+
+    public static function getRawId(): ?int
+    {
+        return intval(Str::substr(Str::trim(static::$current?->id), Str::length(config('app.tenant.prefix'))));
     }
 }

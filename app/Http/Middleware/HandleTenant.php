@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Tenant;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class HandleTenant
@@ -18,7 +19,13 @@ class HandleTenant
     {
         $tenant = $request->route('tenant');
         if (!empty($tenant)) {
-            Tenant::setId($tenant);
+
+            if(!Str::startsWith($tenant, config('app.tenant.prefix'))){
+                abort(404);
+            }
+
+            // tenant id format: au-${groupId}
+            Tenant::setId(Str::trim($tenant));
         }
 
         return $next($request);
