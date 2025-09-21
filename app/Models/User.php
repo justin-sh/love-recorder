@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int id
@@ -17,7 +18,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -53,48 +54,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function groups(): BelongsToMany
+    public function tenants(): BelongsToMany
     {
-        return $this->belongsToMany(Group::class)->withPivot('id')->using(GroupUser::class);
+        return $this->belongsToMany(Tenant::class);
     }
 
-    public function group(): Group
+    public function tenant(): Tenant
     {
-        return $this->groups()->where('group_id', Tenant::getRawId())->first();
-    }
-
-    public function roles(): BelongsToMany
-    {
-        return $this->group()->pivot->roles();
-    }
-
-    public function isDev(): bool
-    {
-        return $this->roles()->where('name', RoleName::DEV->value)->first() != null;
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->roles()->where('name', RoleName::ADMIN->value)->first() != null;
-    }
-
-    public function isAdminOrDev(): bool
-    {
-        return $this->roles()->whereIn('name', [RoleName::ADMIN->value, RoleName::DEV->value])->first() != null;
-    }
-
-    public function isGroupAdmin(): bool
-    {
-        return $this->roles()->where('name', RoleName::GROUP_ADMIN->value)->first() != null;
-    }
-
-    public function isGroupMember(): bool
-    {
-        return $this->roles()->where('name', RoleName::GROUP_MEMBER->value)->first() != null;
-    }
-
-    public function isGroupGuest(): bool
-    {
-        return $this->roles()->where('name', RoleName::GROUP_GUEST->value)->first() != null;
+        return $this->tenants()->where('id', TenantHelper::getRawId())->first();
     }
 }

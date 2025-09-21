@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Children;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChildResource;
 use App\Models\Child;
-use App\Models\Tenant;
+use App\Models\TenantHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -31,7 +31,7 @@ class ChildrenManagementController extends Controller
         $child->user_id = $request->user()->id;
         $child->save();
 
-        return to_route('children.list', Tenant::getId());
+        return to_route('children.list', TenantHelper::getPrefixId());
     }
 
     public function list(Request $request): Response

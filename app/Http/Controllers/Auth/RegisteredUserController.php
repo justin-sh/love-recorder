@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\RoleName;
 use App\Http\Controllers\Controller;
-use App\Models\Group;
+use App\Models\Tenant;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -45,7 +45,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $defaultGroup = new Group(['name'=>$user->name . '\'s default group']);
+        $defaultGroup = new Tenant(['name'=>$user->name . '\'s default group']);
         $defaultGroup->save();
 
         $user->groups()->attach($defaultGroup);

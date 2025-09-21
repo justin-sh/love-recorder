@@ -45,12 +45,12 @@ class AppServiceProvider extends ServiceProvider
         //         // $query->connection; // The name of the database connection
 
         //         // Example: Log the query
-//                 Log::info([
-//                     'sql' => $query->sql,
-//                     'bindings' => $query->bindings,
-//                     'time' => $query->time
-//                     // 'connection' => $query->connection,
-//                 ]);
+                 Log::info([
+                     'sql' => $query->sql,
+                     'bindings' => $query->bindings,
+                     'time' => $query->time
+                     // 'connection' => $query->connection,
+                 ]);
 
         //         // Example: Dump the query to the browser (for debugging)
         //         // dump($query->sql, $query->bindings, $query->time);

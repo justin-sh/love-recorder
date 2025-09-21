@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Tenant;
+use App\Models\TenantHelper;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -20,12 +20,12 @@ class HandleTenant
         $tenant = $request->route('tenant');
         if (!empty($tenant)) {
 
-            if(!Str::startsWith($tenant, config('app.tenant.prefix'))){
+            if (!Str::startsWith($tenant, config('app.tenant.prefix'))) {
                 abort(404);
             }
 
             // tenant id format: au-${groupId}
-            Tenant::setId(Str::trim($tenant));
+            TenantHelper::setId($tenant);
         }
 
         return $next($request);

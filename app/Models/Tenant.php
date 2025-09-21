@@ -2,28 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
 
-class Tenant
+/**
+ * @property string name
+ * @property string description
+ */
+class Tenant extends Model
 {
-    private function __construct(private readonly string $id = '')
-    {
-    }
-
-    static Tenant $current;
-
-    public static function setId($id): void
-    {
-        static::$current = new Tenant($id);
-    }
-
-    public static function getId(): ?string
-    {
-        return static::$current?->id;
-    }
-
-    public static function getRawId(): ?int
-    {
-        return intval(Str::substr(Str::trim(static::$current?->id), Str::length(config('app.tenant.prefix'))));
-    }
+    protected $fillable = ['name', 'description'];
 }

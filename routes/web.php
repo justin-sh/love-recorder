@@ -12,7 +12,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/tenant', function (Request $request) {
         return Inertia::render('Tenant', [
-            'tenant' => $request->user()->groups()->get(['groups.id', 'name']),
+            'tenant' => $request->user()->tenants()->get(['id', 'name']),
             'tenantPrefix' => config('app.tenant.prefix'),
         ]);
     })->name('tenant');

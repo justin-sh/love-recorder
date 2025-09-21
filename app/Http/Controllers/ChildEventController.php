@@ -6,7 +6,7 @@ use App\Enums\EventType;
 use App\Http\Resources\EventResource;
 use App\Models\Child;
 use App\Models\Event;
-use App\Models\Tenant;
+use App\Models\TenantHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -65,7 +65,7 @@ class ChildEventController extends Controller
         $event->details = $details;
         $event->save();
 
-        return to_route('event.list', Tenant::getId());
+        return to_route('event.list', TenantHelper::getPrefixId());
     }
 
     /**
@@ -101,7 +101,7 @@ class ChildEventController extends Controller
         $event->details = $details;
         $event->update($request->json()->all());
 
-        return to_route('event.list', Tenant::getId());
+        return to_route('event.list', TenantHelper::getPrefixId());
     }
 
     /**

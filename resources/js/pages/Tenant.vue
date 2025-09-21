@@ -11,6 +11,8 @@ const page = usePage();
 const tenant = ref();
 
 const goDashboard = () => {
+    if (!tenant.value) return;
+    setTenantId(page.props.tenantPrefix + tenant.value);
     router.get(route('dashboard', getTenantId()));
 };
 
@@ -18,15 +20,17 @@ onMounted(function() {
     if (page.props.tenant.length === 1) {
         tenant.value = page.props.tenant[0].id;
 
-        setTenantId(page.props.tenantPrefix + tenant.value);
+        // setTenantId(page.props.tenantPrefix + tenant.value);
         goDashboard();
     }
+    //todo set default tenant
 });
 </script>
 
 <template>
 
-    <Dialog v-if="page.props.tenant.length > 1"  :visible="true" modal header="Choose Tenant" class="w-72 md:w-84" :closable="false"
+    <Dialog v-if="page.props.tenant.length > 1" :visible="true" modal header="Choose Tenant" class="w-72 md:w-84"
+            :closable="false"
             :close-on-escape="false">
         <Listbox v-model="tenant" :options="page.props.tenant" optionLabel="name" optionValue="id" checkmark
                  :highlightOnSelect="false"
