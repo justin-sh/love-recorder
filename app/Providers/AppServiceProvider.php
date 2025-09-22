@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
         //         // $query->connection; // The name of the database connection
 
         //         // Example: Log the query
-                 Log::info([
+                 Log::channel('sql')->info([
                      'sql' => $query->sql,
                      'bindings' => $query->bindings,
                      'time' => $query->time

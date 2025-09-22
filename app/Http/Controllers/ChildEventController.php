@@ -22,7 +22,11 @@ class ChildEventController extends Controller
     public function index(Request $request): AnonymousResourceCollection|Response
     {
 
-        $data = Event::query()->orderByDesc('event_at')->orderByDesc('id')->cursorPaginate(20);
+        $data = Event::query()
+            ->with('child')
+            ->orderByDesc('event_at')
+            ->orderByDesc('id')
+            ->cursorPaginate(20);
 
         if ($request->wantsJson()) {
             return EventResource::collection($data);

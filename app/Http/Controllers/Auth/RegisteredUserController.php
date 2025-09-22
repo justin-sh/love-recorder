@@ -6,6 +6,7 @@ use App\Enums\RoleName;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use App\Models\Role;
+use App\Models\TenantHelper;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -35,7 +36,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -45,18 +46,22 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $defaultGroup = new Tenant(['name'=>$user->name . '\'s default group']);
-        $defaultGroup->save();
+        $defaultTeam = new Tenant(['name' => $user->name . '\'s default group']);
+        $defaultTeam->save();
 
-        $user->groups()->attach($defaultGroup);
+        $user->default_tenant_id = $defaultTeam->id;
+        $user->save();
 
-        $gManager = Role::query()->where('name', RoleName::GROUP_ADMIN->value)->first();
-        $user->groups()->first()->pivot->roles()->attach($gManager);
+        $user->tenants()->attach($defaultTeam);
+
+        TenantHelper::setId($defaultTeam->id);
+
+        $user->assignRole(RoleName::TENANT_ADMIN->value);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return to_route('tenant');
+        return to_route('dashboard', TenantHelper::getPrefixId());
     }
 }

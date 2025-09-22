@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
@@ -23,7 +23,7 @@ class PermissionSeeder extends Seeder
         $resources = [
             'child',
             'event',
-            'group'
+            'tenant'
         ];
 
         collect($resources)
@@ -31,7 +31,7 @@ class PermissionSeeder extends Seeder
             ->map(function ($set) {
                 return implode('.', $set);
             })->each(function ($permission) {
-                Permission::create(['name' => $permission]);
+                Permission::findOrCreate($permission);
             });
     }
 }

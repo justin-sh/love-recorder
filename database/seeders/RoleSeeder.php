@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 use App\Enums\RoleName;
 use App\Models\Permission;
-use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
+use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -25,7 +25,7 @@ class RoleSeeder extends Seeder
 
     private function createRole(RoleName $role, Collection $permissions): void
     {
-        $newRole = Role::create(['name' => $role->value]);
+        $newRole = Role::findOrCreate($role->value);
         $newRole->permissions()->sync($permissions);
     }
 
@@ -34,7 +34,7 @@ class RoleSeeder extends Seeder
         $permissions = Permission::query()
             ->whereLike('name', 'child.%')
             ->orWhereLike('name', 'event.%')
-            ->orWhereLike('name', 'group.%')
+            ->orWhereLike('name', 'tenant.%')
             ->pluck('id');
 
         $this->createRole(RoleName::DEV, $permissions);
@@ -45,10 +45,10 @@ class RoleSeeder extends Seeder
         $permissions = Permission::query()
             ->whereLike('name', 'child.%')
             ->orWhereLike('name', 'event.%')
-            ->orWhereLike('name', 'group.%')
+            ->orWhereLike('name', 'tenant.%')
             ->pluck('id');
 
-        $this->createRole(RoleName::ADMIN, $permissions);
+        $this->createRole(RoleName::SUPER_ADMIN, $permissions);
     }
 
     private function createGroupAminRole(): void
@@ -57,12 +57,12 @@ class RoleSeeder extends Seeder
             ->whereLike('name', 'child.%')
             ->orWhereLike('name', 'event.%')
             ->orWhere(function (Builder $query) {
-                $query->whereLike('name', 'group.%')
-                    ->whereNot('name', 'group.viewAny');
+                $query->whereLike('name', 'tenant.%')
+                    ->whereNot('name', 'tenant.viewAny');
             })
             ->pluck('id');
 
-        $this->createRole(RoleName::GROUP_ADMIN, $permissions);
+        $this->createRole(RoleName::TENANT_ADMIN, $permissions);
     }
 
     private function createGroupMemberRole(): void
@@ -70,10 +70,10 @@ class RoleSeeder extends Seeder
         $permissions = Permission::query()
             ->whereLike('name', 'child.%')
             ->orWhereLike('name', 'event.%')
-            ->orWhereIn('name', ['group.view', 'group.update'])
+            ->orWhereIn('name', ['tenant.view', 'tenant.update'])
             ->pluck('id');
 
-        $this->createRole(RoleName::GROUP_MEMBER, $permissions);
+        $this->createRole(RoleName::TENANT_MEMBER, $permissions);
     }
 
     private function createGroupGuestRole(): void
@@ -81,9 +81,9 @@ class RoleSeeder extends Seeder
         $permissions = Permission::query()
             ->whereLike('name', 'child.view%')
             ->orWhereLike('name', 'event.view%')
-            ->where('name', 'group.view')
+            ->where('name', 'tenant.view')
             ->pluck('id');
 
-        $this->createRole(RoleName::GROUP_GUEST, $permissions);
+        $this->createRole(RoleName::TENANT_GUEST, $permissions);
     }
 }

@@ -19,12 +19,14 @@ class TenantHelper
         return $prefix . $tenantId;
     }
 
-    public static function setId(string $tenantId): void
+    public static function setId(string|int $tenantId): void
     {
-        $prefix = config('app.tenant.prefix');
-        $tenantId = Str::trim($tenantId);
-        if (Str::startsWith($tenantId, $prefix)) {
-            $tenantId = Str::substr($tenantId, Str::length($prefix));
+        if (is_string($tenantId)) {
+            $prefix = config('app.tenant.prefix');
+            $tenantId = Str::trim($tenantId);
+            if (Str::startsWith($tenantId, $prefix)) {
+                $tenantId = Str::substr($tenantId, Str::length($prefix));
+            }
         }
         setPermissionsTeamId(intval($tenantId));
     }

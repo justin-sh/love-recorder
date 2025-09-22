@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum RoleName: string
 {
-    case ADMIN = 'admin';
+    case SUPER_ADMIN = 'super admin';
     case DEV = 'dev';
-    case GROUP_ADMIN = 'group admin';
-    case GROUP_MEMBER = 'group member';
-    case GROUP_GUEST= 'group guest';
+    case TENANT_ADMIN = 'tenant admin';
+    case TENANT_MEMBER = 'tenant member';
+    case TENANT_GUEST= 'tenant guest';
 }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enums\RoleName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,6 +13,9 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int id
  * @property string name
  * @property string email
+ * @property int default_tenant_id
+ * @property Tenant defaultTenant
+ * @method static User create(array $array)
  */
 class User extends Authenticatable
 {
@@ -59,8 +61,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Tenant::class);
     }
 
-    public function tenant(): Tenant
+    public function defaultTenant(): Tenant
     {
-        return $this->tenants()->where('id', TenantHelper::getRawId())->first();
+        return $this->tenants()->where('id', $this->default_tenant_id)->first();
     }
 }
