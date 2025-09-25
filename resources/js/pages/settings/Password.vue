@@ -10,12 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type BreadcrumbItem } from '@/types';
+import { getTenantId } from '@/lib/utils';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Password settings',
-        href: '/settings/password',
-    },
+        href: '/settings/password'
+    }
 ];
 
 const passwordInput = ref<HTMLInputElement | null>(null);
@@ -28,11 +29,12 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
 
         <SettingsLayout>
             <div class="space-y-6">
-                <HeadingSmall title="Update password" description="Ensure your account is using a long, random password to stay secure" />
+                <HeadingSmall title="Update password"
+                              description="Ensure your account is using a long, random password to stay secure" />
 
                 <Form
                     method="put"
-                    :action="route('password.update')"
+                    :action="route('password.update', getTenantId())"
                     :options="{
                         preserveScroll: true,
                     }"

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -58,11 +59,17 @@ class User extends Authenticatable
 
     public function tenants(): BelongsToMany
     {
-        return $this->belongsToMany(Tenant::class);
+        return $this->belongsToMany(Tenant::class)->withPivot('tenant_role');
     }
 
     public function defaultTenant(): Tenant
     {
         return $this->tenants()->where('id', $this->default_tenant_id)->first();
+    }
+
+    public function tenant(): Tenant
+    {
+//        Log::debug('tenant id=>' . TenantHelper::getRawId());
+        return $this->tenants()->where('id', TenantHelper::getRawId())->first();
     }
 }

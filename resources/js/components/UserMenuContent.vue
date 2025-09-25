@@ -4,6 +4,7 @@ import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSep
 import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
 import { LogOut, Settings, RefreshCcw } from 'lucide-vue-next';
+import { getTenantId } from '@/lib/utils';
 
 interface Props {
     user: User;
@@ -25,18 +26,18 @@ defineProps<Props>();
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
-            <Link class="block w-full" :href="route('tenant')" prefetch as="button">
-                <RefreshCcw class="mr-2 h-4 w-4" />
-                Change Tenant
+            <Link class="block w-full" :href="route('profile.edit', getTenantId())" prefetch as="button">
+                <Settings class="mr-2 h-4 w-4" />
+                Settings
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
-            <Link class="block w-full" :href="route('profile.edit')" prefetch as="button">
-                <Settings class="mr-2 h-4 w-4" />
-                Settings
+            <Link class="block w-full" :href="route('tenant', getTenantId())" prefetch as="button">
+                <RefreshCcw class="mr-2 h-4 w-4" />
+                Change Tenant
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>

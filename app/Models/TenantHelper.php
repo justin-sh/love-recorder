@@ -11,9 +11,12 @@ class TenantHelper
         return getPermissionsTeamId();
     }
 
-    public static function getPrefixId(): string
+    public static function getPrefixId($default = null): string
     {
         $tenantId = getPermissionsTeamId();
+        if ($tenantId == null && $default != null) {
+            $tenantId = $default;
+        }
         $prefix = config('app.tenant.prefix');
 
         return $prefix . $tenantId;

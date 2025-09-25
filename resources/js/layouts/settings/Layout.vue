@@ -4,19 +4,24 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
+import { getTenantId } from '@/lib/utils';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
-        href: '/settings/profile',
+        href: '/'+ getTenantId() +'/settings/profile',
+    },
+    {
+        title: 'Tenant',
+        href: '/'+ getTenantId() +'/settings/tenant',
     },
     {
         title: 'Password',
-        href: '/settings/password',
+        href: '/'+ getTenantId() +'/settings/password',
     },
     {
         title: 'Appearance',
-        href: '/settings/appearance',
+        href: '/'+ getTenantId() +'/settings/appearance',
     },
 ];
 

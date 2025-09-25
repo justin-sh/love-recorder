@@ -8,7 +8,7 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('{tenant}')->group(function () {
 
     Route::get('/tenant', function (Request $request) {
         return Inertia::render('Tenant', [
@@ -17,7 +17,7 @@ Route::middleware('auth')->group(function () {
         ]);
     })->name('tenant');
 
-    Route::prefix('{tenant}')->get('dashboard', function () {
+    Route::get('dashboard', function () {
         return Inertia::render('Dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 });

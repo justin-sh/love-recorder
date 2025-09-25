@@ -52,7 +52,7 @@ class RegisteredUserController extends Controller
         $user->default_tenant_id = $defaultTeam->id;
         $user->save();
 
-        $user->tenants()->attach($defaultTeam);
+        $user->tenants()->attach($defaultTeam->id, ['tenant_role' => RoleName::TENANT_ADMIN->value]);
 
         TenantHelper::setId($defaultTeam->id);
 
