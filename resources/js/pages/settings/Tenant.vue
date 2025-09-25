@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { ref } from 'vue';
 import axios from '@/lib/axios';
 import { getTenantId } from '@/lib/utils';
+import InputError from '@/components/InputError.vue';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -27,14 +28,15 @@ const processing = ref(false);
 const recentlySuccessful = ref(false);
 const name = ref(props.tenant.name);
 const memberEmail = ref('');
-const tenantRole = ref();
+const tenantRole = ref('');
+const error = ref({ target: '', msg: '' });
 
 const tenantRightUpdate = function(v: string) {
     tenantRole.value = v;
 };
 
 function notNullCheck(v: string | null) {
-    console.log(v)
+    // console.log(v)
     return !(v === null || v.trim().length === 0);
 }
 
@@ -45,12 +47,15 @@ function validateEmail(email: string) {
 
 const tenantUpdate = async function() {
     if (!notNullCheck(name.value)) {
+        error.value = { target: 'name', msg: 'name can not be empty' };
         return;
     }
     if (!notNullCheck(memberEmail.value) || !validateEmail(memberEmail.value)) {
+        error.value = { target: 'email', msg: 'email format should be email@email.com' };
         return;
     }
     if (!notNullCheck(tenantRole.value)) {
+        error.value = { target: 'role', msg: 'please choose a role' };
         return;
     }
 
@@ -61,8 +66,13 @@ const tenantUpdate = async function() {
         role: tenantRole.value
     })).data;
 
-    console.log(rv);
-    recentlySuccessful.value = true;
+    // console.log(rv);
+    recentlySuccessful.value = rv.ok;
+    if (!rv.ok) {
+        error.value = rv.error;
+    } else {
+        error.value = { target: '', msg: '' };
+    }
     processing.value = false;
 };
 </script>
@@ -86,6 +96,7 @@ const tenantUpdate = async function() {
                         autocomplete="tenant name"
                         placeholder="Tenant name"
                     />
+                    <InputError :message="error.msg" v-if="error.target === 'name'" />
                 </div>
 
                 <div class="grid gap-2">
@@ -99,6 +110,7 @@ const tenantUpdate = async function() {
                         autocomplete="member email"
                         placeholder="member-email@email.com"
                     />
+                    <InputError :message="error.msg" v-if="error.target === 'email'" />
                 </div>
 
                 <div class="grid gap-2">
@@ -107,6 +119,7 @@ const tenantUpdate = async function() {
                                   :options="props.role" option-label="label" option-value="v"
                                   @update:model-value="tenantRightUpdate"
                                   :allow-empty="false" />
+                    <InputError :message="error.msg" v-if="error.target === 'role'" />
                 </div>
 
                 <div class="flex items-center gap-4">
