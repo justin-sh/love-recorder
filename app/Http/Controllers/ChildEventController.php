@@ -7,6 +7,7 @@ use App\Http\Resources\EventResource;
 use App\Models\Child;
 use App\Models\Event;
 use App\Models\TenantHelper;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -21,9 +22,13 @@ class ChildEventController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection|Response
     {
+        /** @var User $user */
+        $user = $request->user();
 
         $data = Event::query()
             ->with('child')
+            ->where('tenant_id', TenantHelper::getRawId())
+            ->whereIn('tenant_id', $user->tenants()->pluck('tenants.id'))
             ->orderByDesc('event_at')
             ->orderByDesc('id')
             ->cursorPaginate(20);
@@ -42,9 +47,16 @@ class ChildEventController extends Controller
      */
     public function create(Request $request): Response
     {
+        /** @var User $user */
+        $user = $request->user();
+        $children = Child::query()
+            ->where('tenant_id', TenantHelper::getRawId())
+            ->whereIn('tenant_id', $user->tenants()->pluck('tenants.id'))
+            ->get(['id as key', 'name as value']);
+
         return Inertia::render('event/CreateUpdate', [
             'defaultChildId' => $request->integer('c_id'),
-            'children' => Child::all(['id as key', 'name as value']),
+            'children' => $children,
             'type' => collect(EventType::cases())->map(fn($e) => ['key' => $e->value, 'value' => $e->name]),
             'details' => Event::EVENT_DETAILS
         ]);
@@ -75,9 +87,15 @@ class ChildEventController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $tenant, string $id): Response
+    public function edit(Request $request, string $tenant, string $id): Response
     {
-        $data = Child::all(['id as key', 'name as value']);
+        /** @var User $user */
+        $user = $request->user();
+        $data = Child::query()
+            ->where('tenant_id', TenantHelper::getRawId())
+            ->whereIn('tenant_id', $user->tenants()->pluck('tenants.id'))
+            ->get(['id as key', 'name as value']);
+
         $event = Event::find($id);
 
         return Inertia::render('event/CreateUpdate', [

@@ -14,13 +14,13 @@ import { getTenantId } from '@/lib/utils';
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Analysis',
-        href: '',
-    },
+        href: ''
+    }
 ];
 
 const props = defineProps({
     children: Array<{ key: number; value: string }>,
-    data: Array<Event>,
+    data: Array<Event>
 });
 
 const child = ref();
@@ -40,28 +40,28 @@ const setWeightChartOptions = () => {
         plugins: {
             legend: {
                 labels: {
-                    color: textColor,
-                },
-            },
+                    color: textColor
+                }
+            }
         },
         scales: {
             x: {
                 ticks: {
-                    color: textColorSecondary,
+                    color: textColorSecondary
                 },
                 grid: {
-                    color: surfaceBorder,
-                },
+                    color: surfaceBorder
+                }
             },
             y: {
                 ticks: {
-                    color: textColorSecondary,
+                    color: textColorSecondary
                 },
                 grid: {
-                    color: surfaceBorder,
-                },
-            },
-        },
+                    color: surfaceBorder
+                }
+            }
+        }
     };
 };
 
@@ -77,28 +77,28 @@ const setFeedingChartOptions = () => {
         plugins: {
             legend: {
                 labels: {
-                    color: textColor,
-                },
-            },
+                    color: textColor
+                }
+            }
         },
         scales: {
             x: {
                 ticks: {
-                    color: textColorSecondary,
+                    color: textColorSecondary
                 },
                 grid: {
-                    color: surfaceBorder,
-                },
+                    color: surfaceBorder
+                }
             },
             y: {
                 ticks: {
-                    color: textColorSecondary,
+                    color: textColorSecondary
                 },
                 grid: {
-                    color: surfaceBorder,
-                },
-            },
-        },
+                    color: surfaceBorder
+                }
+            }
+        }
     };
 };
 
@@ -142,10 +142,10 @@ const setWeightChartData = (data: object[]) => {
                 spanGaps: true,
                 segment: {
                     borderColor: (ctx) => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, 'rgb(192,75,75)'),
-                    borderDash: (ctx) => skipped(ctx, [6, 6]),
-                },
-            },
-        ],
+                    borderDash: (ctx) => skipped(ctx, [6, 6])
+                }
+            }
+        ]
     };
 };
 
@@ -172,7 +172,7 @@ const setFeedingChartData = (data: object) => {
                 yAxisID: 'y',
                 tension: 0.4,
                 data: wData['br'],
-                spanGaps: true,
+                spanGaps: true
             },
             {
                 label: 'Poo',
@@ -181,7 +181,7 @@ const setFeedingChartData = (data: object) => {
                 yAxisID: 'y',
                 tension: 0.4,
                 data: wData['poo'],
-                spanGaps: true,
+                spanGaps: true
             },
             {
                 label: 'Wee',
@@ -190,8 +190,8 @@ const setFeedingChartData = (data: object) => {
                 yAxisID: 'y',
                 tension: 0.4,
                 data: wData['wee'],
-                spanGaps: true,
-            },
+                spanGaps: true
+            }
             /*{
                 label: 'Bottle Feeding',
                 fill: false,
@@ -201,7 +201,7 @@ const setFeedingChartData = (data: object) => {
                 data: wData['bo'],
                 spanGaps: true
             }*/
-        ],
+        ]
     };
 };
 
@@ -210,7 +210,7 @@ const weightData = ref(setWeightChartData(props.data));
 const feedingOptions = setFeedingChartOptions();
 const feedingData = ref(setFeedingChartData({}));
 
-watch(child, async function () {
+watch(child, async function() {
     // console.log(child.value)
 
     const d = await (await axios.get(route('analysis.weight', getTenantId()), { params: { c_id: child.value } })).data;
@@ -232,24 +232,33 @@ watch(child, async function () {
         <div class="mt-0 w-full py-2 pe-4 md:mt-4">
             <Heading title="Analysis" description="Analysis" class="mb-0! ps-4" />
 
-            <div class="grid justify-center gap-2">
-                <Label for="child">Child</Label>
-                <Radiobox id="child" :default-value="children?.[0].key" v-model="child">
-                    <RadioboxItem
-                        :label="child.value"
-                        name="child"
-                        :value="child.key"
-                        :id="'child-' + child.key"
-                        v-for="child in children"
-                        :key="child.key"
-                    />
-                </Radiobox>
-            </div>
+            <template v-if="children?.length">
+                <div class="grid justify-center gap-2">
+                    <Label for="child">Child</Label>
+                    <Radiobox id="child" :default-value="children?.[0].key" v-model="child">
+                        <RadioboxItem
+                            :label="child.value"
+                            name="child"
+                            :value="child.key"
+                            :id="'child-' + child.key"
+                            v-for="child in children"
+                            :key="child.key"
+                        />
+                    </Radiobox>
+                </div>
 
-            <div class="mx-6 mt-4 flex w-full flex-col justify-center gap-4 px-4 md:flex-row">
-                <VueChart type="line" :data="weightData" :options="weightOptions" class="h-[18rem] w-full grow md:h-[30rem] md:w-1/2" />
-                <VueChart type="line" :data="feedingData" :options="feedingOptions" class="h-[18rem] grow md:h-[30rem]" />
-            </div>
+                <div class="mx-6 mt-4 flex w-full flex-col justify-center gap-4 px-4 md:flex-row">
+                    <VueChart type="line" :data="weightData" :options="weightOptions"
+                              class="h-[18rem] w-full grow md:h-[30rem] md:w-1/2" />
+                    <VueChart type="line" :data="feedingData" :options="feedingOptions"
+                              class="h-[18rem] grow md:h-[30rem]" />
+                </div>
+            </template>
+            <template v-else>
+                <div class="grid justify-center gap-2">
+                    <h2 class="font-bold">No Data Shown</h2>
+                </div>
+            </template>
         </div>
     </AppLayout>
 </template>

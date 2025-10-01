@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ChildResource;
 use App\Models\Child;
 use App\Models\TenantHelper;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,8 +19,8 @@ class ChildrenManagementController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validatedData = $request->validate([
-            'name'=>'required|max:255',
-            'gender'=>'required'
+            'name' => 'required|max:255',
+            'gender' => 'required'
         ]);
 
         $child = new Child();
@@ -36,10 +38,19 @@ class ChildrenManagementController extends Controller
 
     public function list(Request $request): Response
     {
-        ChildResource::withoutWrapping();;
-        $data = ChildResource::collection(Child::all());
+        ChildResource::withoutWrapping();
+
+        /** @var User $user */
+        $user = $request->user();
+
+        $children = Child::query()
+            ->where('tenant_id', TenantHelper::getRawId())
+            ->whereIn('tenant_id', $user->tenants()->pluck('tenants.id'))
+            ->get();
+
+        $data = ChildResource::collection($children);
         return Inertia::render('children/List', [
-            'children'=> $data,
+            'children' => $data,
         ]);
     }
 }

@@ -7,6 +7,8 @@ use App\Http\Resources\ChildResource;
 use App\Http\Resources\EventResource;
 use App\Models\Child;
 use App\Models\Event;
+use App\Models\TenantHelper;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +24,14 @@ class AnalyseController extends Controller
      */
     public function weight(Request $request): Response|AnonymousResourceCollection
     {
-        $children = Child::all(['id as key', 'name as value']);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        $children = Child::query()
+            ->where('tenant_id', TenantHelper::getRawId())
+            ->whereIn('tenant_id', $user->tenants()->pluck('tenants.id'))
+            ->get(['id as key', 'name as value']);
         $childId = $request->integer('c_id');
         if ($childId == 0) {
             $childId = $children->first()?->key ?? 0;
