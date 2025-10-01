@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\TenantHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -14,6 +15,7 @@ Route::middleware('auth')->prefix('{tenant}')->group(function () {
         return Inertia::render('Tenant', [
             'tenant' => $request->user()->tenants()->get(['id', 'name']),
             'tenantPrefix' => config('app.tenant.prefix'),
+            'defaultTenantId' => TenantHelper::getRawId(),
         ]);
     })->name('tenant');
 

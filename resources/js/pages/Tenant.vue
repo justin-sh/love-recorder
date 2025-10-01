@@ -8,7 +8,7 @@ import { onMounted, ref } from 'vue';
 import { getTenantId, setTenantId } from '@/lib/utils';
 
 const page = usePage();
-const tenant = ref();
+const tenant = ref(page.props.defaultTenantId);
 
 const goDashboard = () => {
     if (!tenant.value) return;
