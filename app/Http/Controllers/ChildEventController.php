@@ -79,6 +79,7 @@ class ChildEventController extends Controller
 
         $event = new Event($req);
         $event->details = $details;
+        $event->tenant_id = TenantHelper::getRawId();
         $event->save();
 
         return to_route('event.list', TenantHelper::getPrefixId());

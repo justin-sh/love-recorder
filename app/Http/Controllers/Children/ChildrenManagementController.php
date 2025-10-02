@@ -31,6 +31,7 @@ class ChildrenManagementController extends Controller
         $child->height_dob = $request->integer('height');
         $child->weight_dob = $request->integer('weight');
         $child->user_id = $request->user()->id;
+        $child->tenant_id = TenantHelper::getRawId();
         $child->save();
 
         return to_route('children.list', TenantHelper::getPrefixId());
