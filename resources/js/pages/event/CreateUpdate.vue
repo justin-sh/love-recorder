@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, Child } from '@/types';
 import { Form, Head, usePage } from '@inertiajs/vue3';
@@ -58,6 +59,7 @@ const evtType = ref(defaultEventType);
 const defaultTime = event?.event_at ?? getDateTimeLocalString(new Date());
 const evtAt = ref(defaultTime);
 const evtEnd = ref(event?.event_end ?? '');
+
 </script>
 
 <template>
@@ -157,6 +159,11 @@ const evtEnd = ref(event?.event_end ?? '');
                                     <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
                                     {{ isEdit ? 'Update' : 'Add' }} child event
                                 </Button>
+
+                                <label>
+                                    <Checkbox name="addNew" />
+                                    Add New
+                                </label>
                             </div>
                         </div>
                     </Form>

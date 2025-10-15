@@ -69,6 +69,7 @@ class ChildEventController extends Controller
     {
         $details = [];
         $req = $request->json()->all();
+
         foreach (Arr::get($req, 'details', []) as $k => $v) {
             if (!empty(trim($k)) && !empty(trim($v['v']))) {
                 $details[trim($k)] = $v;
@@ -82,7 +83,11 @@ class ChildEventController extends Controller
         $event->tenant_id = TenantHelper::getRawId();
         $event->save();
 
-        return to_route('event.list', TenantHelper::getPrefixId());
+        $isAddNew = Arr::exists($req, 'addNew') && 'on' == $req['addNew'];
+
+        $redirectUrl = $isAddNew ?  'event.create' : 'event.list';
+
+        return to_route($redirectUrl, TenantHelper::getPrefixId());
     }
 
     /**
